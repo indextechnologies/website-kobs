@@ -522,26 +522,38 @@
       display: flex;
       gap: 18px;
       width: max-content;
-      animation: ig-scroll 65s linear infinite;
-    }
-    .ig-carousel-track:hover { animation-play-state: paused; }
-
-    @keyframes ig-scroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
+      will-change: transform;
     }
 
-    .ig-embed-slot {
+    .ig-post {
       flex-shrink: 0;
-      width: 320px;
+      width: 252px;
+      background: #fff;
+      border-radius: 3px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.14);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+      cursor: pointer;
     }
-    /* Normaliza el embed de Instagram */
-    .ig-embed-slot .instagram-media {
-      margin: 0 !important;
-      min-width: unset !important;
-      max-width: 320px !important;
-      border-radius: 4px !important;
+    .ig-post:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(0,0,0,0.22); }
+    .ig-post-top {
+      display: flex; align-items: center; gap: 9px;
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(0,0,0,0.06);
     }
+    .ig-avatar {
+      width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    }
+    .ig-post-top span { font-size: 0.72rem; font-weight: 600; color: #262626; font-family: 'DM Sans', sans-serif; }
+    .ig-post-img-wrap { width: 252px; height: 252px; overflow: hidden; }
+    .ig-post-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .ig-post-bottom { padding: 10px 12px 12px; }
+    .ig-post-actions { display: flex; gap: 12px; margin-bottom: 6px; }
+    .ig-post-actions span { font-size: 0.74rem; color: #262626; display: flex; align-items: center; gap: 4px; }
+    .ig-post-actions i { font-size: 0.84rem; }
+    .ig-post-caption { font-size: 0.71rem; color: #555; line-height: 1.5; }
+    .ig-post-caption b { color: #262626; }
 
     .ig-cta { text-align: center; margin-top: 44px; }
     .btn-ig {
@@ -704,8 +716,9 @@
       .menu-tabs::-webkit-scrollbar { display: none; }
       .tab { flex-shrink: 0; padding: 11px 16px; font-size: 0.7rem; }
 
-      /* Instagram embeds */
-      .ig-embed-slot { width: 270px; }
+      /* Instagram posts */
+      .ig-post { width: 210px; }
+      .ig-post-img-wrap { width: 210px; height: 210px; }
 
       /* Contact inner */
       .con-inner { padding: 0 20px; }
@@ -1160,54 +1173,140 @@
         <i class="fa-brands fa-instagram"></i>&nbsp; @kobsrestoran
       </a>
     </div>
-    <!-- Carrusel infinito: 8 posts reales + 8 clones para loop sin corte -->
+    <!-- Carrusel infinito: 8 posts × 2 sets clonados — loop via JS rAF -->
     <div class="ig-carousel-outer">
-      <div class="ig-carousel-track">
+      <div class="ig-carousel-track" id="ig-track">
 
-        <!-- ── SET 1 (originales) ── -->
-        <div class="ig-embed-slot">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/Cy1AqQNOAbx/" data-instgrm-version="14"></blockquote>
+        <!-- ── SET 1 ── -->
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80" alt="Parrilla Köbs" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 247</span><span><i class="fa-regular fa-comment"></i> 18</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🔥 Parrilla a leña. El sabor que no se olvida.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/C0RkvD0M7Gb/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80" alt="Interior Köbs" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 183</span><span><i class="fa-regular fa-comment"></i> 12</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> ✨ Un ambiente que invita a quedarse.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CwAsbjgOLEi/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80" alt="Köbs Classic" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 312</span><span><i class="fa-regular fa-comment"></i> 24</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍔 La Köbs Classic. Un clásico con razón.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CrD_j4xLC9T/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500&q=80" alt="Volcán de chocolate" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 198</span><span><i class="fa-regular fa-comment"></i> 15</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍫 Volcán de chocolate. El postre que enamora.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CopspQ3OGx5/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1558030006-450675393462?w=500&q=80" alt="Bife" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 276</span><span><i class="fa-regular fa-comment"></i> 21</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🥩 Ojo de bife. Punto perfecto, siempre.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/Cmg4Xl1tenZ/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" alt="Restaurante" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 145</span><span><i class="fa-regular fa-comment"></i> 9</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍽️ Cada mesa, una experiencia única.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/Ca91SoWOnJO/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1624128082323-beb6b8b508db?w=500&q=80" alt="Empanadas" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 223</span><span><i class="fa-regular fa-comment"></i> 16</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🥟 Empanadas caseras. Rellenas de amor.</p>
+          </div>
+        </div>
+        <div class="ig-post">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1608270586620-248524c67de9?w=500&q=80" alt="Cerveza artesanal" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 167</span><span><i class="fa-regular fa-comment"></i> 11</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍺 Cerveza artesanal. Local y con carácter.</p>
+          </div>
         </div>
 
-        <!-- ── SET 2 (clones aria-hidden para loop infinito sin corte) ── -->
-        <div class="ig-embed-slot" aria-hidden="true">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/Cy1AqQNOAbx/" data-instgrm-version="14"></blockquote>
+        <!-- ── SET 2 (clon exacto — aria-hidden) ── -->
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 247</span><span><i class="fa-regular fa-comment"></i> 18</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🔥 Parrilla a leña. El sabor que no se olvida.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot" aria-hidden="true">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/C0RkvD0M7Gb/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 183</span><span><i class="fa-regular fa-comment"></i> 12</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> ✨ Un ambiente que invita a quedarse.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot" aria-hidden="true">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CwAsbjgOLEi/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 312</span><span><i class="fa-regular fa-comment"></i> 24</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍔 La Köbs Classic. Un clásico con razón.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot" aria-hidden="true">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CrD_j4xLC9T/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 198</span><span><i class="fa-regular fa-comment"></i> 15</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍫 Volcán de chocolate. El postre que enamora.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot" aria-hidden="true">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/CopspQ3OGx5/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1558030006-450675393462?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 276</span><span><i class="fa-regular fa-comment"></i> 21</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🥩 Ojo de bife. Punto perfecto, siempre.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot" aria-hidden="true">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/Cmg4Xl1tenZ/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 145</span><span><i class="fa-regular fa-comment"></i> 9</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍽️ Cada mesa, una experiencia única.</p>
+          </div>
         </div>
-        <div class="ig-embed-slot" aria-hidden="true">
-          <blockquote class="instagram-media" data-instgrm-permalink="https://www.instagram.com/p/Ca91SoWOnJO/" data-instgrm-version="14"></blockquote>
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1624128082323-beb6b8b508db?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 223</span><span><i class="fa-regular fa-comment"></i> 16</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🥟 Empanadas caseras. Rellenas de amor.</p>
+          </div>
+        </div>
+        <div class="ig-post" aria-hidden="true">
+          <div class="ig-post-top"><div class="ig-avatar"></div><span>kobsrestoran</span></div>
+          <div class="ig-post-img-wrap"><img src="https://images.unsplash.com/photo-1608270586620-248524c67de9?w=500&q=80" alt="" loading="lazy"></div>
+          <div class="ig-post-bottom">
+            <div class="ig-post-actions"><span><i class="fa-regular fa-heart"></i> 167</span><span><i class="fa-regular fa-comment"></i> 11</span></div>
+            <p class="ig-post-caption"><b>kobsrestoran</b> 🍺 Cerveza artesanal. Local y con carácter.</p>
+          </div>
         </div>
 
       </div>
@@ -1379,6 +1478,31 @@ var observer = new IntersectionObserver(function(entries) {
 }, { threshold: 0.12 });
 document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 
+// ===================== INSTAGRAM CAROUSEL =====================
+(function() {
+  var track = document.getElementById('ig-track');
+  if (!track) return;
+  var pos = 0;
+  var paused = false;
+  var speed = 0.55;
+
+  track.addEventListener('mouseenter', function() { paused = true; });
+  track.addEventListener('mouseleave', function() { paused = false; });
+  track.addEventListener('touchstart', function() { paused = true; }, { passive: true });
+  track.addEventListener('touchend', function() { setTimeout(function() { paused = false; }, 1200); }, { passive: true });
+
+  function tick() {
+    if (!paused) {
+      pos += speed;
+      var half = track.scrollWidth / 2;
+      if (pos >= half) pos -= half;
+      track.style.transform = 'translateX(-' + pos + 'px)';
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
 // ===================== FORM =====================
 function handleForm(e) {
   e.preventDefault();
@@ -1394,7 +1518,5 @@ function handleForm(e) {
   }, 4000);
 }
 </script>
-  <!-- Script oficial de embeds de Instagram -->
-  <script async src="//www.instagram.com/embed.js"></script>
 </body>
 </html>
