@@ -1332,12 +1332,20 @@
             <input type="text" id="nombre" placeholder="Tu nombre" required>
           </div>
           <div class="field">
-            <label for="tel">Teléfono</label>
+            <label for="tel">Teléfono / WhatsApp</label>
             <input type="tel" id="tel" placeholder="Tu teléfono">
+          </div>
+          <div class="field">
+            <label for="email">Email <span style="font-weight:400;opacity:.6">(opcional)</span></label>
+            <input type="email" id="email" placeholder="tu@email.com">
           </div>
           <div class="field">
             <label for="fecha">Fecha</label>
             <input type="date" id="fecha" required>
+          </div>
+          <div class="field">
+            <label for="hora">Hora</label>
+            <input type="time" id="hora" value="12:00" required>
           </div>
           <div class="field">
             <label for="personas">Personas</label>
@@ -1507,15 +1515,46 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
 function handleForm(e) {
   e.preventDefault();
   var btn = document.getElementById('submit-btn');
-  btn.textContent  = '¡Reserva enviada! Nos contactamos pronto.';
-  btn.style.background = '#2D6A4F';
-  btn.disabled = true;
-  setTimeout(function() {
-    btn.textContent  = 'Reservar Mesa';
-    btn.style.background = '';
-    btn.disabled = false;
-    e.target.reset();
-  }, 4000);
+  var personas = document.getElementById('personas').value;
+  var msg      = document.getElementById('msg').value;
+  var notas    = personas ? (msg ? personas + ' personas — ' + msg : personas + ' personas') : msg;
+
+  btn.textContent = 'Enviando…';
+  btn.disabled    = true;
+
+  fetch('https://app.indexte.cloud/api/kobs/reservas', {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nombre:   document.getElementById('nombre').value,
+      email:    document.getElementById('email').value || '',
+      telefono: document.getElementById('tel').value   || '',
+      fecha:    document.getElementById('fecha').value,
+      hora:     document.getElementById('hora').value,
+      notas:    notas,
+    }),
+  })
+  .then(function(r) {
+    if (!r.ok) throw new Error(r.status);
+    btn.textContent     = '¡Reserva enviada! Nos contactamos pronto.';
+    btn.style.background = '#2D6A4F';
+    setTimeout(function() {
+      btn.textContent      = 'Reservar Mesa';
+      btn.style.background = '';
+      btn.disabled         = false;
+      e.target.reset();
+      document.getElementById('hora').value = '12:00';
+    }, 5000);
+  })
+  .catch(function() {
+    btn.textContent     = 'Error al enviar. Intentá de nuevo.';
+    btn.style.background = '#7f1d1d';
+    setTimeout(function() {
+      btn.textContent      = 'Reservar Mesa';
+      btn.style.background = '';
+      btn.disabled         = false;
+    }, 4000);
+  });
 }
 </script>
 </body>
