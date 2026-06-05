@@ -1826,25 +1826,25 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
     }).join('');
   }).catch(function(){});
 
-  // ── Instagram carousel ────────────────────────────────────────────────────────
+    // ── Instagram carousel ────────────────────────────────────────────────────────
   fetch(BASE + '/instagram').then(function(r){ return r.json(); }).then(function(items) {
-    var active = (items||[]).filter(function(i){ return i.activo !== false; })
+    var active = (items||[]).filter(function(i){ return i.activo !== false && i.imagenUrl; })
                              .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
     if (!active.length) return;
     var track = document.getElementById('ig-track');
     if (!track) return;
-    var imgs = track.querySelectorAll('.ig-img-wrap img');
-    imgs.forEach(function(img, idx) {
-      var entry = active[idx % active.length];
-      if (!entry) return;
-      var wrap = img.parentElement;
-      var link = document.createElement('a');
-      link.href = entry.urlPost || 'https://www.instagram.com/kobsrestoran/';
-      link.target = '_blank'; link.rel = 'noopener';
-      link.style.display = 'block'; link.style.height = '100%';
-      wrap.parentNode.insertBefore(link, wrap);
-      link.appendChild(wrap);
-    });
+    function mkItem(item, hidden) {
+      var attrs = hidden ? ' aria-hidden="true"' : '';
+      var img = '<img src="'+esc(item.imagenUrl)+'\" alt="'+esc(item.titulo||'Köbs')+'\" loading="lazy">';
+      var wrap = '<div class="ig-img-wrap"'+attrs+'>'+img+'</div>';
+      if (item.urlPost) {
+        return '<a href="'+esc(item.urlPost)+'\" target="_blank" rel="noopener" style="display:block">'+wrap+'</a>';
+      }
+      return wrap;
+    }
+    var html = active.map(function(i){ return mkItem(i, false); }).join('')
+             + active.map(function(i){ return mkItem(i, true); }).join('');
+    track.innerHTML = html;
   }).catch(function(){});
 
   // ── Promos ───────────────────────────────────────────────────────────────────
@@ -1898,8 +1898,10 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
     var el = document.getElementById('contact-horarios');
     if (!el) return;
     var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-    var lines = data.filter(function(h){ return h.activo !== false && !h.cerrado; })
-      .map(function(h){ return (h.dia||'') + ': ' + (h.horaAbre||'') + ' – ' + (h.horaCierra||''); });
+    var seen = {};
+    var lines = data
+      .filter(function(h){ return h.activo !== false && !h.cerrado && h.dia && !seen[h.dia]; })
+      .map(function(h){ seen[h.dia]=true; return h.dia+': '+(h.horaApertura||'')+' – '+(h.horaCierre||''); });
     if (lines.length) el.innerHTML = lines.join('<br>');
   }).catch(function(){});
 })();
@@ -1923,8 +1925,8 @@ function populateHoras(dateStr) {
     sel.innerHTML = '<option value="">Cerrado este día</option>';
     return;
   }
-  var abre = h.horaAbre || h.abre || '07:00';
-  var cierra = h.horaCierra || h.cierra || '22:00';
+  var abre = h.horaApertura || '07:00';
+  var cierra = h.horaCierre || '22:00';
   var opts = [];
   var [ah, am] = abre.split(':').map(Number);
   var [ch, cm] = cierra.split(':').map(Number);
