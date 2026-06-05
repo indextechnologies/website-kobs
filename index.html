@@ -492,6 +492,51 @@
 
     /* ===================== GALLERY ===================== */
     #galeria { background: var(--dark-2); padding: 130px 0; }
+    #galeria .gal-grid-empty { text-align:center; color:rgba(255,255,255,0.3); padding: 60px 0; font-size:0.85rem; }
+
+    /* ===================== RESEÑAS ===================== */
+    #resenas { background: var(--dark); padding: 120px 0; }
+    .res-hdr { text-align: center; margin-bottom: 64px; }
+    .res-hdr .eyebrow { color: var(--gold); }
+    .resenas-grid {
+      max-width: 1100px; margin: 0 auto; padding: 0 64px;
+      display: grid; grid-template-columns: repeat(2,1fr); gap: 28px;
+    }
+    .resena-card {
+      background: var(--dark-2); border: 1px solid rgba(255,255,255,0.07);
+      padding: 28px 30px; transition: border-color 0.3s, transform 0.3s;
+    }
+    .resena-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-3px); }
+    .resena-stars { color: var(--gold); font-size: 0.85rem; margin-bottom: 14px; letter-spacing: 2px; }
+    .resena-texto { font-size: 0.9rem; line-height: 1.75; color: rgba(255,255,255,0.7); margin-bottom: 18px; font-style: italic; }
+    .resena-autor { display: flex; align-items: center; gap: 12px; }
+    .resena-av { width:38px; height:38px; border-radius:50%; background:var(--crimson); display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; color:white; flex-shrink:0; }
+    .resena-nombre { font-weight:600; font-size:0.88rem; color:white; }
+    .resena-plat { font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em; }
+    @media(max-width:700px){ .resenas-grid { grid-template-columns:1fr; padding:0 24px; } }
+
+    /* ===================== PROMOS ===================== */
+    #promos { background: var(--dark-3); padding: 120px 0; }
+    .promos-hdr { text-align: center; margin-bottom: 60px; }
+    .promos-hdr .eyebrow { color: var(--crimson); }
+    .promos-grid {
+      max-width: 1100px; margin: 0 auto; padding: 0 64px;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 22px;
+    }
+    .promo-card {
+      background: var(--dark-2); border: 1px solid rgba(196,30,58,0.18);
+      overflow: hidden; transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .promo-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+    .promo-img { height:180px; background: linear-gradient(135deg, var(--dark-3), var(--crimson-dark)); }
+    .promo-img img { width:100%; height:100%; object-fit:cover; display:block; }
+    .promo-body { padding: 20px 22px 24px; }
+    .promo-badge { display:inline-block; background:var(--crimson); color:white; font-size:0.65rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; padding:4px 10px; margin-bottom:10px; }
+    .promo-title { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:white; margin-bottom:8px; }
+    .promo-desc { font-size:0.8rem; color:rgba(255,255,255,0.5); line-height:1.6; margin-bottom:14px; }
+    .promo-discount { font-family:'Cormorant Garamond',serif; font-size:1.4rem; font-weight:700; color:var(--gold); }
+    @media(max-width:900px){ .promos-grid { grid-template-columns:repeat(2,1fr); padding:0 24px; } }
+    @media(max-width:560px){ .promos-grid { grid-template-columns:1fr; } }
 
     .gal-hdr { text-align: center; margin-bottom: 60px; }
     .gal-hdr .eyebrow { color: var(--gold); }
@@ -1325,32 +1370,23 @@
       <p class="eyebrow">Nuestro Espacio</p>
       <h2 class="sec-title light">El Ambiente Köbs</h2>
     </div>
-    <div class="gal-grid">
-      <div class="gal-item">
-        <img src="img/kobs-interior.png" alt="Salón Köbs" loading="lazy">
-        <div class="gal-overlay"><i class="fa-solid fa-expand"></i></div>
-      </div>
-      <div class="gal-item">
-        <img src="img/kobs-costilla.png" alt="Costilla Köbs" loading="lazy">
-        <div class="gal-overlay"><i class="fa-solid fa-expand"></i></div>
-      </div>
-      <div class="gal-item">
-        <img src="img/kobs-redvelvet.png" alt="Red Velvet" loading="lazy">
-        <div class="gal-overlay"><i class="fa-solid fa-expand"></i></div>
-      </div>
-      <div class="gal-item">
-        <img src="img/kobs-desayuno.png" alt="Desayuno Köbs" loading="lazy">
-        <div class="gal-overlay"><i class="fa-solid fa-expand"></i></div>
-      </div>
-      <div class="gal-item">
-        <img src="img/kobs-milanesa-pollo.png" alt="Milanesa de Pollo" loading="lazy">
-        <div class="gal-overlay"><i class="fa-solid fa-expand"></i></div>
-      </div>
-      <div class="gal-item">
-        <img src="img/kobs-pollo-riojana.png" alt="Pollo a la Riojana" loading="lazy">
-        <div class="gal-overlay"><i class="fa-solid fa-expand"></i></div>
-      </div>
+    <div class="gal-grid" id="gal-grid">
+      <div class="gal-item"><img src="img/kobs-interior.png" alt="Salón Köbs" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>
+      <div class="gal-item"><img src="img/kobs-costilla.png" alt="Costilla Köbs" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>
+      <div class="gal-item"><img src="img/kobs-redvelvet.png" alt="Red Velvet" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>
+      <div class="gal-item"><img src="img/kobs-desayuno.png" alt="Desayuno Köbs" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>
+      <div class="gal-item"><img src="img/kobs-milanesa-pollo.png" alt="Milanesa de Pollo" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>
+      <div class="gal-item"><img src="img/kobs-pollo-riojana.png" alt="Pollo a la Riojana" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>
     </div>
+  </section>
+
+  <!-- RESEÑAS -->
+  <section id="resenas">
+    <div class="res-hdr reveal">
+      <p class="eyebrow">Lo que dicen</p>
+      <h2 class="sec-title light">Reseñas</h2>
+    </div>
+    <div class="resenas-grid" id="resenas-grid"></div>
   </section>
 
   <!-- INSTAGRAM -->
@@ -1402,6 +1438,15 @@
     </div>
   </section>
 
+  <!-- PROMOS -->
+  <section id="promos" style="display:none">
+    <div class="promos-hdr reveal">
+      <p class="eyebrow">Ofertas especiales</p>
+      <h2 class="sec-title">Promociones</h2>
+    </div>
+    <div class="promos-grid" id="promos-grid"></div>
+  </section>
+
   <!-- CONTACTO -->
   <section id="contacto">
     <div class="con-inner">
@@ -1428,7 +1473,9 @@
           </div>
           <div class="field">
             <label for="hora">Hora</label>
-            <input type="time" id="hora" value="12:00" required>
+            <select id="hora" required>
+              <option value="">Seleccioná una fecha primero</option>
+            </select>
           </div>
           <div class="field">
             <label for="personas">Personas</label>
@@ -1453,26 +1500,26 @@
       <div class="con-info reveal">
         <div class="info-row">
           <div class="info-label"><i class="fa-solid fa-location-dot"></i> Encontranos</div>
-          <p><a href="https://www.google.com/maps/place/Kobs+Restor%C3%A1n/@-25.2734187,-57.5660724,17z/data=!3m1!4b1!4m6!3m5!1s0x945da61e986a6fb9:0x2d08d0f519170664!8m2!3d-25.2734187!4d-57.5634975!16s%2Fg%2F11g9qs172d" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Dr. Gerónimo Zubizarreta<br>Madame Lynch, Asunción<br>Paraguay</a></p>
+          <p id="contact-address"><a href="https://www.google.com/maps/place/Kobs+Restor%C3%A1n/@-25.2734187,-57.5660724,17z" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Dr. Gerónimo Zubizarreta<br>Madame Lynch, Asunción<br>Paraguay</a></p>
         </div>
         <div class="info-row">
           <div class="info-label"><i class="fa-regular fa-clock"></i> Horarios</div>
-          <p>Lun – Vie: 07:00 – 18:30<br>Sáb – Dom: 08:00 – 14:00</p>
+          <p id="contact-horarios">Lun – Vie: 07:00 – 18:30<br>Sáb – Dom: 08:00 – 14:00</p>
         </div>
         <div class="info-row">
           <div class="info-label"><i class="fa-solid fa-phone"></i> Contacto</div>
-          <p>+595 981 333 334</p>
+          <p><a id="contact-phone" href="tel:+595981333334" style="color:inherit;">+595 981 333 334</a></p>
         </div>
         <div class="info-row">
           <div class="info-label"><i class="fa-solid fa-share-nodes"></i> Seguinos</div>
           <div class="social-row">
-            <a href="https://www.instagram.com/kobsrestoran/" target="_blank" rel="noopener" class="soc" title="Instagram">
+            <a id="contact-ig-link" href="https://www.instagram.com/kobsrestoran/" target="_blank" rel="noopener" class="soc" title="Instagram">
               <i class="fa-brands fa-instagram"></i>
             </a>
             <a href="#" class="soc" title="Facebook">
               <i class="fa-brands fa-facebook-f"></i>
             </a>
-            <a href="https://wa.me/595981333334" target="_blank" rel="noopener" class="soc" title="WhatsApp">
+            <a id="contact-wa-link" href="https://wa.me/595981333334" target="_blank" rel="noopener" class="soc" title="WhatsApp">
               <i class="fa-brands fa-whatsapp"></i>
             </a>
           </div>
@@ -1488,7 +1535,7 @@
       <li><a href="#nosotros">Nosotros</a></li>
       <li><a href="#menu">Menú</a></li>
       <li><a href="#galeria">Galería</a></li>
-      <li><a href="#instagram">Instagram</a></li>
+      <li><a href="#resenas">Reseñas</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
     <p class="foot-copy">© 2025 Köbs Restorán &nbsp;·&nbsp; Todos los derechos reservados.</p>
@@ -1738,6 +1785,164 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
   track.addEventListener('touchend', function() { setTimeout(function() { track.style.animationPlayState = 'running'; }, 1200); }, { passive: true });
 })();
 
+// ===================== CONTENIDO DINÁMICO =====================
+(function() {
+  var BASE = 'https://app.indexte.cloud/api/kobs';
+  var horarios = [];
+
+  function esc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+  function stars(n) { return '★'.repeat(Math.min(5, Math.max(1, n||5))) + '☆'.repeat(5 - Math.min(5, Math.max(1, n||5))); }
+
+  // ── Galería ─────────────────────────────────────────────────────────────────
+  fetch(BASE + '/galeria').then(function(r){ return r.json(); }).then(function(items) {
+    var active = (items||[]).filter(function(i){ return i.activo !== false && i.seccion === 'Galería'; })
+                            .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
+    if (!active.length) return;
+    var grid = document.getElementById('gal-grid');
+    if (!grid) return;
+    grid.innerHTML = active.map(function(i) {
+      return '<div class="gal-item"><img src="'+esc(i.imagenUrl)+'" alt="'+esc(i.titulo||'Köbs')+'" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>';
+    }).join('');
+  }).catch(function(){});
+
+  // ── Reseñas ──────────────────────────────────────────────────────────────────
+  fetch(BASE + '/testimonios').then(function(r){ return r.json(); }).then(function(items) {
+    var active = (items||[]).filter(function(i){ return i.activo !== false; })
+                             .sort(function(a,b){ return (a.orden||99)-(b.orden||99); })
+                             .slice(0, 4);
+    var grid = document.getElementById('resenas-grid');
+    if (!grid || !active.length) return;
+    grid.innerHTML = active.map(function(r) {
+      var initials = (r.nombre||'K').slice(0,2).toUpperCase();
+      return '<div class="resena-card reveal">'
+        + '<div class="resena-stars">'+stars(r.rating)+'</div>'
+        + '<p class="resena-texto">"'+esc(r.testimonio||r.texto||'')+'"</p>'
+        + '<div class="resena-autor">'
+        + '<div class="resena-av">'+initials+'</div>'
+        + '<div><div class="resena-nombre">'+esc(r.nombre)+'</div>'
+        + '<div class="resena-plat">'+(r.plataforma||'Google')+'</div></div>'
+        + '</div></div>';
+    }).join('');
+  }).catch(function(){});
+
+  // ── Instagram carousel ────────────────────────────────────────────────────────
+  fetch(BASE + '/instagram').then(function(r){ return r.json(); }).then(function(items) {
+    var active = (items||[]).filter(function(i){ return i.activo !== false; })
+                             .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
+    if (!active.length) return;
+    var track = document.getElementById('ig-track');
+    if (!track) return;
+    var imgs = track.querySelectorAll('.ig-img-wrap img');
+    imgs.forEach(function(img, idx) {
+      var entry = active[idx % active.length];
+      if (!entry) return;
+      var wrap = img.parentElement;
+      var link = document.createElement('a');
+      link.href = entry.urlPost || 'https://www.instagram.com/kobsrestoran/';
+      link.target = '_blank'; link.rel = 'noopener';
+      link.style.display = 'block'; link.style.height = '100%';
+      wrap.parentNode.insertBefore(link, wrap);
+      link.appendChild(wrap);
+    });
+  }).catch(function(){});
+
+  // ── Promos ───────────────────────────────────────────────────────────────────
+  fetch(BASE + '/promociones').then(function(r){ return r.json(); }).then(function(items) {
+    var active = (items||[]).filter(function(i){ return i.activo !== false; })
+                             .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
+    var sec = document.getElementById('promos');
+    var grid = document.getElementById('promos-grid');
+    if (!sec || !grid || !active.length) return;
+    grid.innerHTML = active.map(function(p) {
+      var imgHtml = p.imagenUrl ? '<div class="promo-img"><img src="'+esc(p.imagenUrl)+'" alt="'+esc(p.titulo)+'" loading="lazy"></div>' : '<div class="promo-img"></div>';
+      var desc = p.descuento ? (p.tipo === 'Porcentaje' ? p.descuento+'% OFF' : p.tipo === 'Monto fijo' ? '₲ '+Number(p.descuento).toLocaleString('es-PY')+' OFF' : p.tipo === '2x1' ? '2×1' : esc(String(p.descuento))) : '';
+      return '<div class="promo-card">'+imgHtml
+        +'<div class="promo-body">'
+        +'<span class="promo-badge">'+(p.tipo||'Promo')+'</span>'
+        +'<div class="promo-title">'+esc(p.titulo)+'</div>'
+        +(p.descripcion ? '<div class="promo-desc">'+esc(p.descripcion)+'</div>' : '')
+        +(desc ? '<div class="promo-discount">'+desc+'</div>' : '')
+        +'</div></div>';
+    }).join('');
+    sec.style.display = '';
+  }).catch(function(){});
+
+  // ── Contacto ─────────────────────────────────────────────────────────────────
+  fetch(BASE + '/contacto').then(function(r){ return r.json(); }).then(function(c) {
+    if (!c) return;
+    if (c.telefono) {
+      var ph = document.getElementById('contact-phone');
+      if (ph) { ph.textContent = c.telefono; ph.href = 'tel:'+c.telefono.replace(/\s/g,''); }
+      var wa = document.getElementById('contact-wa-link');
+      if (wa) wa.href = 'https://wa.me/'+c.telefono.replace(/[^0-9]/g,'');
+    }
+    if (c.instagram) {
+      var ig = document.getElementById('contact-ig-link');
+      if (ig) ig.href = c.instagram.startsWith('http') ? c.instagram : 'https://instagram.com/'+c.instagram.replace('@','');
+    }
+    if (c.direccion) {
+      var addr = document.getElementById('contact-address');
+      if (addr) addr.innerHTML = '<span style="color:inherit">'+esc(c.direccion)+'</span>';
+    }
+  }).catch(function(){});
+
+  // ── Horarios → select de horas ───────────────────────────────────────────────
+  fetch(BASE + '/horarios').then(function(r){ return r.json(); }).then(function(data) {
+    horarios = data || [];
+  }).catch(function(){});
+
+  // ── Info de horarios en contacto ─────────────────────────────────────────────
+  fetch(BASE + '/horarios').then(function(r){ return r.json(); }).then(function(data) {
+    if (!data || !data.length) return;
+    var el = document.getElementById('contact-horarios');
+    if (!el) return;
+    var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+    var lines = data.filter(function(h){ return h.activo !== false && !h.cerrado; })
+      .map(function(h){ return (h.dia||'') + ': ' + (h.horaAbre||'') + ' – ' + (h.horaCierra||''); });
+    if (lines.length) el.innerHTML = lines.join('<br>');
+  }).catch(function(){});
+})();
+
+// ── Horas select dinámico ────────────────────────────────────────────────────
+var _horarios = [];
+fetch('https://app.indexte.cloud/api/kobs/horarios').then(function(r){ return r.json(); }).then(function(d){ _horarios = d||[]; }).catch(function(){});
+
+function populateHoras(dateStr) {
+  var sel = document.getElementById('hora');
+  if (!sel) return;
+  var DIAS = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  if (!dateStr || !_horarios.length) {
+    sel.innerHTML = '<option value="">Seleccioná una fecha primero</option>';
+    return;
+  }
+  var dow = new Date(dateStr + 'T12:00:00').getDay(); // 0=Dom
+  var dName = DIAS[dow];
+  var h = _horarios.find(function(x){ return x.dia === dName || x.diaNombre === dName; });
+  if (!h || h.cerrado) {
+    sel.innerHTML = '<option value="">Cerrado este día</option>';
+    return;
+  }
+  var abre = h.horaAbre || h.abre || '07:00';
+  var cierra = h.horaCierra || h.cierra || '22:00';
+  var opts = [];
+  var [ah, am] = abre.split(':').map(Number);
+  var [ch, cm] = cierra.split(':').map(Number);
+  var cur = ah * 60 + (am||0);
+  var end = ch * 60 + (cm||0) - 30;
+  while (cur <= end) {
+    var hh = String(Math.floor(cur/60)).padStart(2,'0');
+    var mm = String(cur%60).padStart(2,'0');
+    opts.push('<option value="'+hh+':'+mm+'">'+hh+':'+mm+'</option>');
+    cur += 30;
+  }
+  sel.innerHTML = opts.join('') || '<option value="">Sin horarios disponibles</option>';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var fechaInput = document.getElementById('fecha');
+  if (fechaInput) fechaInput.addEventListener('change', function(){ populateHoras(this.value); });
+});
+
 // ===================== FORM =====================
 function handleForm(e) {
   e.preventDefault();
@@ -1770,7 +1975,7 @@ function handleForm(e) {
       btn.style.background = '';
       btn.disabled         = false;
       e.target.reset();
-      document.getElementById('hora').value = '12:00';
+      populateHoras(null);
     }, 5000);
   })
   .catch(function() {
