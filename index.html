@@ -37,7 +37,7 @@
     #intro-overlay {
       position: fixed;
       inset: 0;
-      background: #ffffff;
+      background: #0c0505;
       z-index: 9999;
       display: flex;
       align-items: center;
@@ -46,7 +46,7 @@
     }
 
     #intro-logo {
-      width: 340px;
+      width: 320px;
       height: auto;
       transform-origin: center center;
     }
@@ -90,12 +90,10 @@
 
     .nav-logo {
       display: flex; align-items: center; text-decoration: none;
-      font-family: 'Playfair Display', serif;
-      font-size: 1.35rem; font-weight: 900;
-      letter-spacing: 0.14em; color: white;
-      transition: color 0.3s;
+      transition: opacity 0.3s;
     }
-    .nav-logo:hover { color: var(--gold); }
+    .nav-logo:hover { opacity: 0.8; }
+    .nav-logo-img { height: 64px; width: auto; object-fit: contain; }
 
     .nav-links { display: flex; gap: 38px; list-style: none; }
     .nav-links a {
@@ -169,12 +167,18 @@
       overflow: hidden;
     }
 
-    .hero-bg {
+    .hero-slides { position: absolute; inset: 0; }
+
+    .hero-slide {
       position: absolute; inset: 0;
-      background: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=85&fit=crop') center/cover no-repeat;
-      transform: scale(1.12);
-      will-change: transform;
+      background-size: cover;
+      background-position: center;
     }
+
+    @keyframes kb-zoom-in  { from { transform: scale(1); }          to { transform: scale(1.14); } }
+    @keyframes kb-zoom-out { from { transform: scale(1.14) translateX(-1.5%); } to { transform: scale(1) translateX(0); } }
+    @keyframes kb-zoom-in-r { from { transform: scale(1) translateX(1.5%); } to { transform: scale(1.14) translateX(0); } }
+    @keyframes kb-zoom-out-l { from { transform: scale(1.12) translateY(-1%); } to { transform: scale(1) translateY(0); } }
 
     .hero-overlay {
       position: absolute; inset: 0;
@@ -646,7 +650,7 @@
       text-align: center;
       border-top: 1px solid rgba(255,255,255,0.05);
     }
-    .footer-logo { height: 48px; width: auto; margin-bottom: 20px; opacity: 0.85; }
+    .footer-logo { height: 130px; width: auto; margin-bottom: 20px; opacity: 0.9; }
     .foot-links { display: flex; justify-content: center; gap: 30px; list-style: none; margin-bottom: 18px; flex-wrap: wrap; }
     .foot-links a {
       color: rgba(255,255,255,0.35); font-size: 0.72rem;
@@ -746,7 +750,7 @@
 
 <!-- =================== INTRO OVERLAY =================== -->
 <div id="intro-overlay">
-  <img id="intro-logo" src="kobs logo.jpg" alt="Köbs Restorán">
+  <img id="intro-logo" src="img/kobs-logo.png" alt="Köbs Restorán">
 </div>
 
 <!-- =================== MAIN CONTENT =================== -->
@@ -754,7 +758,9 @@
 
   <!-- NAV -->
   <nav id="navbar">
-    <a href="#hero" class="nav-logo">KÖBS</a>
+    <a href="#hero" class="nav-logo">
+      <img src="img/kobs-logo.png" alt="Köbs" class="nav-logo-img">
+    </a>
     <ul class="nav-links">
       <li><a href="#hero">Inicio</a></li>
       <li><a href="#nosotros">Nosotros</a></li>
@@ -781,7 +787,12 @@
 
   <!-- HERO -->
   <section id="hero">
-    <div class="hero-bg" id="hero-bg"></div>
+    <div class="hero-slides">
+      <div class="hero-slide" style="background-image:url('img/kobs-hero-1.png')"></div>
+      <div class="hero-slide" style="background-image:url('img/kobs-hero-2.png')"></div>
+      <div class="hero-slide" style="background-image:url('img/kobs-hero-3.png')"></div>
+      <div class="hero-slide" style="background-image:url('img/kobs-hero-4.png')"></div>
+    </div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-tagline">Donde cada plato cuenta una historia</p>
@@ -1268,7 +1279,7 @@
 
   <!-- FOOTER -->
   <footer>
-    <img src="kobs logo.jpg" alt="Köbs" class="footer-logo">
+    <img src="img/kobs-logo.png" alt="Köbs" class="footer-logo">
     <ul class="foot-links">
       <li><a href="#nosotros">Nosotros</a></li>
       <li><a href="#menu">Menú</a></li>
@@ -1340,11 +1351,51 @@ document.querySelectorAll('.tab').forEach(function(tab) {
   });
 });
 
-// ===================== PARALLAX HERO =====================
-var heroBg = document.getElementById('hero-bg');
-window.addEventListener('scroll', function() {
-  if (heroBg) heroBg.style.transform = 'scale(1.12) translateY(' + (window.scrollY * 0.28) + 'px)';
-}, { passive: true });
+// ===================== HERO SLIDESHOW =====================
+(function() {
+  var slides = document.querySelectorAll('.hero-slide');
+  if (!slides.length) return;
+  var n = slides.length;
+  var cur = 0;
+  var kbs = ['kb-zoom-in', 'kb-zoom-out', 'kb-zoom-in-r', 'kb-zoom-out-l'];
+
+  function init(s) {
+    s.style.opacity = '0';
+    s.style.zIndex  = '0';
+    s.style.transition = 'none';
+    s.style.animation  = '';
+  }
+
+  slides.forEach(init);
+
+  function activate(i) {
+    /* incoming: z:1, instant opacity 1, then KB animation */
+    slides[i].style.zIndex = '1';
+    slides[i].style.opacity = '1';
+    slides[i].style.transition = 'none';
+    setTimeout(function() {
+      slides[i].style.animation = kbs[i % n] + ' 6.5s ease-in-out forwards';
+    }, 30);
+  }
+
+  function go() {
+    var prev = cur;
+    cur = (cur + 1) % n;
+
+    /* outgoing: z:2, fade to 0 */
+    slides[prev].style.zIndex = '2';
+    slides[prev].style.transition = 'opacity 1.4s ease';
+    slides[prev].style.opacity = '0';
+
+    activate(cur);
+
+    /* cleanup prev after fade */
+    setTimeout(function() { init(slides[prev]); }, 1500);
+  }
+
+  activate(0);
+  setInterval(go, 5000);
+})();
 
 // ===================== SCROLL REVEAL =====================
 var observer = new IntersectionObserver(function(entries) {
