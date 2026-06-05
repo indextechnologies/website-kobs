@@ -534,10 +534,19 @@
       animation: igscroll 55s linear infinite;
     }
 
-    .ig-embed-wrap {
+    .ig-img-wrap {
       flex-shrink: 0;
-      width: 326px;
+      width: 252px; height: 252px;
+      overflow: hidden;
+      border-radius: 4px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
+    .ig-img-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+      transition: transform 0.5s ease;
+    }
+    .ig-img-wrap:hover img { transform: scale(1.06); }
 
     .ig-cta { text-align: center; margin-top: 44px; }
     .btn-ig {
@@ -700,7 +709,7 @@
       .menu-tabs::-webkit-scrollbar { display: none; }
       .tab { flex-shrink: 0; padding: 11px 16px; font-size: 0.7rem; }
 
-      .ig-embed-wrap { width: 280px; }
+      .ig-img-wrap { width: 210px; height: 210px; }
 
       /* Contact inner */
       .con-inner { padding: 0 20px; }
@@ -1167,26 +1176,28 @@
       <div class="ig-carousel-track" id="ig-track">
 
         <!-- SET 1 -->
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/C8uzH-OvPEn/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/C4sujA6ufEr/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/C2cTysBuNxD/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/CwV3GaCO4b5/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CxLXWwbOeQz/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/Cvz8LSFOBLj/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CtzB1MyutP-/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/Cr_R0qmMb2V/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CrbEdXXuZYL/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
+        <div class="ig-img-wrap"><img src="img/kobs-costilla.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-interior.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-redvelvet.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-empa-pollo.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-cheesecake.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-pollo-riojana.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-merienda.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-milanesa-pollo.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-desayuno.png" alt="Köbs" loading="lazy"></div>
+        <div class="ig-img-wrap"><img src="img/kobs-milanesas.png" alt="Köbs" loading="lazy"></div>
 
         <!-- SET 2 (clon — aria-hidden) -->
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/C8uzH-OvPEn/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/C4sujA6ufEr/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/C2cTysBuNxD/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/CwV3GaCO4b5/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CxLXWwbOeQz/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/Cvz8LSFOBLj/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CtzB1MyutP-/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/reel/Cr_R0qmMb2V/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
-        <div class="ig-embed-wrap" aria-hidden="true"><blockquote class="instagram-media" data-instgrm-captioned data-instgrm-permalink="https://www.instagram.com/p/CrbEdXXuZYL/" data-instgrm-version="14" style="background:#FFF;border:0;border-radius:3px;box-shadow:0 0 1px 0 rgba(0,0,0,.5),0 1px 10px 0 rgba(0,0,0,.15);margin:0;max-width:326px;min-width:326px;padding:0;width:326px;"></blockquote></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-costilla.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-interior.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-redvelvet.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-empa-pollo.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-cheesecake.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-pollo-riojana.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-merienda.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-milanesa-pollo.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-desayuno.png" alt="" loading="lazy"></div>
+        <div class="ig-img-wrap" aria-hidden="true"><img src="img/kobs-milanesas.png" alt="" loading="lazy"></div>
 
       </div>
     </div>
@@ -1461,6 +1472,5 @@ function handleForm(e) {
   });
 }
 </script>
-  <script async src="//www.instagram.com/embed.js"></script>
 </body>
 </html>
