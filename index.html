@@ -184,9 +184,9 @@
     .hero-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(160deg,
-        rgba(35,14,5,0.58) 0%,
-        rgba(50,20,7,0.76) 45%,
-        rgba(30,10,3,0.96) 100%
+        rgba(50,22,6,0.75) 0%,
+        rgba(65,28,8,0.90) 45%,
+        rgba(22,7,2,0.98) 100%
       );
     }
 
@@ -396,10 +396,43 @@
     .tab:hover { border-color: rgba(196,30,58,0.5); color: rgba(255,255,255,0.9); }
     .tab.active { background: var(--crimson); border-color: var(--crimson); color: white; }
 
+    /* Level 2 — subcategory tabs */
+    .menu-l2 {
+      display: none; justify-content: center;
+      gap: 6px; flex-wrap: wrap;
+      margin-top: -40px; margin-bottom: 48px; padding: 0 24px;
+    }
+    .sub-tab {
+      background: transparent;
+      border: 1px solid rgba(201,168,76,0.22);
+      color: rgba(255,255,255,0.45);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.68rem; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 9px 20px; cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .sub-tab:hover { border-color: rgba(201,168,76,0.5); color: rgba(255,255,255,0.8); }
+    .sub-tab.active { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+
     .panels { max-width: 1200px; margin: 0 auto; padding: 0 64px; }
 
-    .panel { display: none; }
-    .panel.active { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; animation: fadePanel 0.4s ease; }
+    .panel { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; animation: fadePanel 0.4s ease; }
+
+    /* Loading & empty states */
+    .menu-loading, .menu-empty {
+      max-width: 1200px; margin: 0 auto; padding: 80px 24px;
+      text-align: center; color: rgba(255,255,255,0.35);
+      font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+    }
+    .menu-spinner {
+      width: 36px; height: 36px; border-radius: 50%;
+      border: 2px solid rgba(196,30,58,0.2);
+      border-top-color: var(--crimson);
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
     @keyframes fadePanel { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
@@ -440,15 +473,16 @@
 
     @media (max-width: 900px) {
       .panels { padding: 0 24px; }
-      .panel.active { grid-template-columns: repeat(2,1fr); }
+      .panel { grid-template-columns: repeat(2,1fr); }
       .menudia-featured { grid-column: 1 / -1 !important; }
     }
     @media (max-width: 640px) {
       .menudia-featured { flex-direction: column !important; gap: 18px !important; }
       .menudia-featured .menudia-divider { display: none !important; }
+      .menu-l2 { margin-top: -20px; }
     }
     @media (max-width: 560px) {
-      .panel.active { grid-template-columns: 1fr; }
+      .panel { grid-template-columns: 1fr; }
     }
 
     /* ===================== GALLERY ===================== */
@@ -718,6 +752,9 @@
       }
       .menu-tabs::-webkit-scrollbar { display: none; }
       .tab { flex-shrink: 0; padding: 11px 16px; font-size: 0.7rem; }
+      .menu-l2 { flex-wrap: nowrap; overflow-x: auto; justify-content: flex-start; padding: 0 20px 6px; scrollbar-width: none; }
+      .menu-l2::-webkit-scrollbar { display: none; }
+      .sub-tab { flex-shrink: 0; }
 
       .ig-img-wrap { width: 210px; height: 210px; }
 
@@ -864,17 +901,9 @@
       <p class="eyebrow">Lo que preparamos</p>
       <h2 class="sec-title light">Nuestro Menú</h2>
     </div>
-    <div class="menu-tabs">
-      <button class="tab active" data-tab="menudia">Menú del Día</button>
-      <button class="tab" data-tab="milanesas">Milanesas</button>
-      <button class="tab" data-tab="parrilla">Parrilla</button>
-      <button class="tab" data-tab="pastas">Pastas</button>
-      <button class="tab" data-tab="empanadas">Empanadas &amp; Picadas</button>
-      <button class="tab" data-tab="guarniciones">Guarniciones</button>
-      <button class="tab" data-tab="postres">Postres</button>
-      <button class="tab" data-tab="bebidas">Bebidas</button>
-    </div>
-    <div class="panels">
+    <div class="menu-tabs" id="menu-l1-tabs"></div>
+    <div class="menu-l2" id="menu-l2-tabs"></div>
+    <div class="panels" id="menu-panels">
 
       <!-- MENÚ DEL DÍA -->
       <div class="panel active" id="panel-menudia">
@@ -1514,15 +1543,130 @@ mobClose.addEventListener('click', close);
 document.querySelectorAll('.mob-link').forEach(function(l) { l.addEventListener('click', close); });
 function close() { mob.classList.remove('open'); ham.classList.remove('open'); document.body.style.overflow = ''; }
 
-// ===================== MENU TABS =====================
-document.querySelectorAll('.tab').forEach(function(tab) {
-  tab.addEventListener('click', function() {
-    document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
-    document.querySelectorAll('.panel').forEach(function(p) { p.classList.remove('active'); });
-    tab.classList.add('active');
-    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
-  });
-});
+// ===================== MENU DINÁMICO =====================
+(function() {
+  var API = 'https://app.indexte.cloud/api/kobs/menu';
+  var elL1 = document.getElementById('menu-l1-tabs');
+  var elL2 = document.getElementById('menu-l2-tabs');
+  var elPanels = document.getElementById('menu-panels');
+  var state = { cats: [], subs: [], items: [], selCat: null, selSub: null };
+
+  function esc(s) {
+    return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
+  }
+
+  function price(p) {
+    if (!p) return '<span style="font-size:0.82rem;font-family:\'DM Sans\',sans-serif;color:rgba(201,168,76,0.6);">Consultar precio</span>';
+    return '₲ ' + Number(p).toLocaleString('es-PY');
+  }
+
+  function renderL1() {
+    var hasDia = state.items.some(function(i) { return i.platoDelDia && i.activo !== false; });
+    var activeCats = state.cats
+      .filter(function(c) { return c.activo !== false && state.items.some(function(i) { return i.categoriaId === c.id && i.activo !== false; }); })
+      .sort(function(a,b) { return (a.orden||99)-(b.orden||99); });
+
+    var html = '';
+    if (hasDia) html += '<button class="tab" data-cat="__dia__">Menú del Día</button>';
+    activeCats.forEach(function(c) { html += '<button class="tab" data-cat="'+c.id+'">'+esc(c.nombre)+'</button>'; });
+    elL1.innerHTML = html;
+
+    var first = elL1.querySelector('.tab');
+    if (first) { first.classList.add('active'); state.selCat = first.dataset.cat; }
+
+    elL1.querySelectorAll('.tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        elL1.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+        btn.classList.add('active');
+        state.selCat = btn.dataset.cat;
+        state.selSub = null;
+        renderL2();
+        renderProducts();
+      });
+    });
+  }
+
+  function renderL2() {
+    if (state.selCat === '__dia__') { elL2.style.display='none'; elL2.innerHTML=''; return; }
+    var subs = state.subs
+      .filter(function(s) { return s.categoriaId === state.selCat && s.activo !== false; })
+      .sort(function(a,b) { return (a.orden||99)-(b.orden||99); });
+    if (!subs.length) { elL2.style.display='none'; elL2.innerHTML=''; state.selSub=null; return; }
+    var html = '';
+    subs.forEach(function(s,i) { html += '<button class="sub-tab'+(i===0?' active':'')+'" data-sub="'+s.id+'">'+esc(s.nombre)+'</button>'; });
+    elL2.innerHTML = html;
+    elL2.style.display = 'flex';
+    state.selSub = subs[0].id;
+    elL2.querySelectorAll('.sub-tab').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        elL2.querySelectorAll('.sub-tab').forEach(function(t){ t.classList.remove('active'); });
+        btn.classList.add('active');
+        state.selSub = btn.dataset.sub;
+        renderProducts();
+      });
+    });
+  }
+
+  function renderProducts() {
+    var items;
+    if (state.selCat === '__dia__') {
+      items = state.items.filter(function(i){ return i.platoDelDia && i.activo !== false; });
+    } else if (state.selSub) {
+      items = state.items.filter(function(i){ return i.subcategoriaId === state.selSub && i.activo !== false; });
+    } else {
+      items = state.items.filter(function(i){ return i.categoriaId === state.selCat && i.activo !== false; });
+    }
+    items = items.slice().sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
+
+    if (!items.length) {
+      elPanels.innerHTML = '<div class="menu-empty"><p>Sin productos disponibles.</p></div>';
+      return;
+    }
+
+    var html = '<div class="panel">';
+
+    if (state.selCat === '__dia__') {
+      html += '<div class="card menudia-featured" style="grid-column:span 3;background:var(--dark-3);border-color:rgba(201,168,76,0.3);display:flex;align-items:center;gap:32px;padding:28px 32px;">'
+        + '<div style="flex-shrink:0;">'
+        + '<div style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:0.85rem;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px;">Lun – Sáb</div>'
+        + '<div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;font-weight:700;color:white;line-height:1.2;">Menú del Día</div>'
+        + '<div style="font-size:0.78rem;color:rgba(255,255,255,0.45);margin:10px 0 0;line-height:1.6;">Varía cada día — preguntá al mozo</div>'
+        + '</div></div>';
+    }
+
+    items.forEach(function(item) {
+      var imgHtml = item.imagenUrl
+        ? '<div class="card-img-wrap"><img src="'+esc(item.imagenUrl)+'" alt="'+esc(item.nombre)+'" loading="lazy"></div>'
+        : '';
+      html += '<div class="card">'+imgHtml
+        + '<div class="card-body">'
+        + '<h3 class="card-name">'+esc(item.nombre)+'</h3>'
+        + (item.descripcion ? '<p class="card-desc">'+esc(item.descripcion)+'</p>' : '')
+        + '<span class="card-price">'+price(item.precio)+'</span>'
+        + '</div></div>';
+    });
+
+    html += '</div>';
+    elPanels.innerHTML = html;
+  }
+
+  elL1.innerHTML = '';
+  elPanels.innerHTML = '<div class="menu-loading"><div class="menu-spinner"></div><p>Cargando menú…</p></div>';
+
+  fetch(API)
+    .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(data) {
+      state.cats = data.categories || [];
+      state.subs = data.subcategories || [];
+      state.items = data.items || [];
+      renderL1();
+      renderL2();
+      renderProducts();
+    })
+    .catch(function() {
+      elPanels.innerHTML = '<div class="menu-empty"><p>No se pudo cargar el menú. Intentá de nuevo más tarde.</p></div>';
+    });
+})();
 
 // ===================== HERO SLIDESHOW =====================
 (function() {
