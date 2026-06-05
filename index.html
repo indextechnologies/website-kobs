@@ -1566,13 +1566,11 @@ function close() { mob.classList.remove('open'); ham.classList.remove('open'); d
   }
 
   function renderL1() {
-    var hasDia = state.items.some(function(i) { return i.platoDelDia && i.activo !== false; });
     var activeCats = state.cats
       .filter(function(c) { return c.activo !== false && state.items.some(function(i) { return i.categoriaId === c.id && i.activo !== false; }); })
       .sort(function(a,b) { return (a.orden||99)-(b.orden||99); });
 
-    var html = '';
-    if (hasDia) html += '<button class="tab" data-cat="__dia__">Menú del Día</button>';
+    var html = '<button class="tab" data-cat="__dia__">Menú del Día</button>';
     activeCats.forEach(function(c) { html += '<button class="tab" data-cat="'+c.id+'">'+esc(c.nombre)+'</button>'; });
     elL1.innerHTML = html;
 
@@ -1623,21 +1621,24 @@ function close() { mob.classList.remove('open'); ham.classList.remove('open'); d
     }
     items = items.slice().sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
 
+    var diaBanner = '<div class="card menudia-featured" style="grid-column:span 3;background:var(--dark-3);border-color:rgba(201,168,76,0.3);display:flex;align-items:center;gap:32px;padding:28px 32px;">'
+      + '<div style="flex-shrink:0;">'
+      + '<div style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:0.85rem;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px;">Lun – Sáb</div>'
+      + '<div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;font-weight:700;color:white;line-height:1.2;">Menú del Día</div>'
+      + '<div style="font-size:0.78rem;color:rgba(255,255,255,0.45);margin:10px 0 0;line-height:1.6;">Varía cada día — preguntá al mozo</div>'
+      + '</div></div>';
+
     if (!items.length) {
-      elPanels.innerHTML = '<div class="menu-empty"><p>Sin productos disponibles.</p></div>';
+      if (state.selCat === '__dia__') {
+        elPanels.innerHTML = '<div class="panel">' + diaBanner + '</div>';
+      } else {
+        elPanels.innerHTML = '<div class="menu-empty"><p>Sin productos disponibles.</p></div>';
+      }
       return;
     }
 
     var html = '<div class="panel">';
-
-    if (state.selCat === '__dia__') {
-      html += '<div class="card menudia-featured" style="grid-column:span 3;background:var(--dark-3);border-color:rgba(201,168,76,0.3);display:flex;align-items:center;gap:32px;padding:28px 32px;">'
-        + '<div style="flex-shrink:0;">'
-        + '<div style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:0.85rem;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px;">Lun – Sáb</div>'
-        + '<div style="font-family:\'Playfair Display\',serif;font-size:1.5rem;font-weight:700;color:white;line-height:1.2;">Menú del Día</div>'
-        + '<div style="font-size:0.78rem;color:rgba(255,255,255,0.45);margin:10px 0 0;line-height:1.6;">Varía cada día — preguntá al mozo</div>'
-        + '</div></div>';
-    }
+    if (state.selCat === '__dia__') { html += diaBanner; }
 
     items.forEach(function(item) {
       var imgHtml = item.imagenUrl
