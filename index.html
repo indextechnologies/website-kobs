@@ -26,9 +26,10 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
+    html { background: #0D0505; }
     body {
       font-family: 'DM Sans', sans-serif;
-      background: var(--dark);
+      background: #0D0505;
       color: white;
       overflow-x: hidden;
     }
@@ -183,9 +184,9 @@
     .hero-overlay {
       position: absolute; inset: 0;
       background: linear-gradient(160deg,
-        rgba(10,3,3,0.35) 0%,
-        rgba(26,10,10,0.62) 45%,
-        rgba(26,10,10,0.92) 100%
+        rgba(35,14,5,0.58) 0%,
+        rgba(50,20,7,0.76) 45%,
+        rgba(30,10,3,0.96) 100%
       );
     }
 
@@ -667,6 +668,15 @@
     }
     .foot-links a:hover { color: var(--gold); }
     .foot-copy { color: rgba(255,255,255,0.25); font-size: 0.74rem; letter-spacing: 0.08em; }
+    .foot-powered {
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      margin-top: 22px; padding-top: 18px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: rgba(255,255,255,0.18); font-size: 0.68rem; letter-spacing: 0.12em;
+      text-decoration: none; transition: opacity 0.3s;
+    }
+    .foot-powered:hover { opacity: 0.55; }
+    .foot-powered img { height: 18px; width: auto; opacity: 0.5; }
 
     @media (max-width: 768px) {
       footer { padding: 48px 24px; }
@@ -1268,7 +1278,7 @@
         </div>
         <div class="info-row">
           <div class="info-label"><i class="fa-solid fa-phone"></i> Contacto</div>
-          <p>(011) 4XXX-XXXX</p>
+          <p>+595 981 333 334</p>
         </div>
         <div class="info-row">
           <div class="info-label"><i class="fa-solid fa-share-nodes"></i> Seguinos</div>
@@ -1279,7 +1289,7 @@
             <a href="#" class="soc" title="Facebook">
               <i class="fa-brands fa-facebook-f"></i>
             </a>
-            <a href="#" class="soc" title="WhatsApp">
+            <a href="https://wa.me/595981333334" target="_blank" rel="noopener" class="soc" title="WhatsApp">
               <i class="fa-brands fa-whatsapp"></i>
             </a>
           </div>
@@ -1299,6 +1309,9 @@
       <li><a href="#contacto">Contacto</a></li>
     </ul>
     <p class="foot-copy">© 2025 Köbs Restorán &nbsp;·&nbsp; Todos los derechos reservados.</p>
+    <a href="https://indexte.com" target="_blank" rel="noopener" class="foot-powered">
+      Powered by <img src="img/index-logo.png" alt="indexte"> indexte
+    </a>
   </footer>
 
 </div><!-- /main-content -->
