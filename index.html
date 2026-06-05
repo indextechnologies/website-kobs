@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -1607,9 +1607,10 @@ function close() { mob.classList.remove('open'); ham.classList.remove('open'); d
     return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : '';
   }
 
-  function price(p) {
-    if (!p) return '<span style="font-size:0.82rem;font-family:\'DM Sans\',sans-serif;color:rgba(201,168,76,0.6);">Consultar precio</span>';
-    return '₲ ' + Number(p).toLocaleString('es-PY');
+  function priceHtml(p) {
+    if (p == null || p === '') return '<span class="card-price" style="font-size:0.82rem;font-family:\'DM Sans\',sans-serif;color:rgba(201,168,76,0.6);">Consultar precio</span>';
+    if (Number(p) === 0) return '';
+    return '<span class="card-price">₲ ' + Number(p).toLocaleString('es-PY') + '</span>';
   }
 
   function renderL1() {
@@ -1695,7 +1696,7 @@ function close() { mob.classList.remove('open'); ham.classList.remove('open'); d
         + '<div class="card-body">'
         + '<h3 class="card-name">'+esc(item.nombre)+'</h3>'
         + (item.descripcion ? '<p class="card-desc">'+esc(item.descripcion)+'</p>' : '')
-        + '<span class="card-price">'+price(item.precio)+'</span>'
+        + priceHtml(item.precio)
         + '</div></div>';
     });
 
