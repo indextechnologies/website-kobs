@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Köbs Restorán — Sabor que se recuerda</title>
+  <meta name="description" content="Köbs Restorán en Asunción, Paraguay. Parrilla a las brasas, menú del día, pastas, milanesas y postres artesanales. Sabor auténtico y momentos que perduran.">
+  <link rel="icon" type="image/png" href="img/kobs-logo.png">
+  <meta property="og:type" content="restaurant">
+  <meta property="og:title" content="Köbs Restorán — Sabor que se recuerda">
+  <meta property="og:description" content="Parrilla a las brasas, menú del día y postres artesanales en Asunción, Paraguay.">
+  <meta property="og:image" content="https://kobsrestoran.indexte.com/img/kobs-hero-1.png">
+  <meta property="og:url" content="https://kobsrestoran.indexte.com/">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
@@ -850,6 +858,30 @@
       .foot-links { gap: 14px; }
       .footer-logo { height: 40px; }
     }
+
+    /* ===================== LIGHTBOX ===================== */
+    #lightbox {
+      position: fixed; inset: 0;
+      background: rgba(8,3,3,0.92);
+      z-index: 10000;
+      display: none; align-items: center; justify-content: center;
+      padding: 40px; cursor: zoom-out;
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    #lightbox.open { display: flex; opacity: 1; }
+    #lightbox img {
+      max-width: 92vw; max-height: 88vh;
+      object-fit: contain;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+    }
+    #lightbox .lb-close {
+      position: absolute; top: 22px; right: 30px;
+      width: 44px; height: 44px;
+      background: none; border: none; cursor: pointer;
+      color: rgba(255,255,255,0.7); font-size: 2.2rem; line-height: 1;
+      transition: color 0.3s;
+    }
+    #lightbox .lb-close:hover { color: white; }
   </style>
 </head>
 <body>
@@ -954,413 +986,6 @@
     <div class="menu-tabs" id="menu-l1-tabs"></div>
     <div class="menu-l2" id="menu-l2-tabs"></div>
     <div class="panels" id="menu-panels">
-
-      <!-- MENÚ DEL DÍA -->
-      <div class="panel active" id="panel-menudia">
-        <div class="card menudia-featured" style="grid-column:span 3;background:var(--dark-3);border-color:rgba(201,168,76,0.3);display:flex;align-items:center;gap:32px;padding:28px 32px;">
-          <div style="flex-shrink:0;">
-            <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:6px;">Lun – Sáb</div>
-            <div style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:white;line-height:1.2;">Menú del Día</div>
-            <div style="font-size:0.78rem;color:rgba(255,255,255,0.45);margin:10px 0 16px;line-height:1.6;">Plato Principal + Guarnición<br>Varía cada día — preguntá al mozo</div>
-            <span style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--gold);">Desde ₲ 18.000</span>
-          </div>
-          <div class="menudia-divider" style="width:1px;height:90px;background:rgba(255,255,255,0.1);flex-shrink:0;"></div>
-          <div style="font-size:0.82rem;color:rgba(255,255,255,0.5);line-height:2.2;flex:1;">
-            <span style="color:var(--gold);font-weight:600;">Lunes · Miércoles:</span> Sopas, guisos y platos de cuchara<br>
-            <span style="color:var(--gold);font-weight:600;">Martes:</span> Pollo y carnes en salsa, fricase, chupin<br>
-            <span style="color:var(--gold);font-weight:600;">Jueves:</span> Festival de Pastas — todas a ₲ 24.000<br>
-            <span style="color:var(--gold);font-weight:600;">Viernes · Domingo:</span> Parrilla a las Brasas
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-pollo-riojana.png" alt="Vori Vori con Pollo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Vori Vori con Pollo</h3>
-            <p class="card-desc">Sopa paraguaya tradicional con pollo tierno y bolitas de maíz y queso Paraguay</p>
-            <span class="card-price">₲ 20.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-desayuno.png" alt="Feijoada" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Feijoada</h3>
-            <p class="card-desc">Guiso brasileño de frijoles negros con carne, arroz quesu y ensalada de repollo</p>
-            <span class="card-price">₲ 23.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-merienda.png" alt="Fricase de Pollo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Fricase de Pollo</h3>
-            <p class="card-desc">Pollo en salsa cremosa con vegetales salteados y guarnición a elección</p>
-            <span class="card-price">₲ 23.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80" alt="Chupin de Pollo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Chupin de Pollo</h3>
-            <p class="card-desc">Pollo en caldo especiado con papas y verduras de temporada</p>
-            <span class="card-price">₲ 25.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80" alt="Lomo Acaramelado" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Lomo Acaramelado</h3>
-            <p class="card-desc">Lomo fino en reducción de champiñones y cebolla, con guarnición incluida</p>
-            <span class="card-price">₲ 28.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Marinera de Carne" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Marinera de Carne</h3>
-            <p class="card-desc">Carne en salsa de la casa con vegetales salteados y guarnición</p>
-            <span class="card-price">₲ 25.000</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- MILANESAS -->
-      <div class="panel" id="panel-milanesas">
-        <div class="card menudia-featured" style="grid-column:span 3;background:var(--dark-3);border-color:rgba(196,30,58,0.25);display:flex;align-items:center;gap:20px;padding:20px 28px;">
-          <i class="fa-solid fa-star" style="font-size:1.5rem;color:var(--crimson);flex-shrink:0;"></i>
-          <div>
-            <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.1rem;color:white;margin-bottom:4px;">Festival de Milanesas</div>
-            <div style="font-size:0.8rem;color:rgba(255,255,255,0.45);">Todas servidas con guarnición a elección · De lunes a sábado</div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-milanesas.png" alt="Napolitana de Carne" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Napolitana de Carne</h3>
-            <p class="card-desc">Milanesa de carne con salsa de tomate, jamón y mozzarella gratinada</p>
-            <span class="card-price">₲ 28.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=80" alt="Milanesa a Caballo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Milanesa a Caballo</h3>
-            <p class="card-desc">Milanesa de carne coronada con dos huevos fritos. Contundente e irresistible.</p>
-            <span class="card-price">₲ 28.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" alt="Milanesa a la Villa" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Milanesa a la Villa</h3>
-            <p class="card-desc">Con salsa especial de la casa, queso fundido y morrones asados</p>
-            <span class="card-price">₲ 28.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-milanesa-pollo.png" alt="Napolitana de Pollo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Napolitana de Pollo</h3>
-            <p class="card-desc">Pechuga de pollo apanada con salsa napolitana casera y mozzarella fundida</p>
-            <span class="card-price">₲ 24.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" alt="Pechuga Caprese" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Pechuga Caprese</h3>
-            <p class="card-desc">Pechuga apanada con tomate fresco, mozzarella y albahaca. Liviana y fresca.</p>
-            <span class="card-price">₲ 26.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80" alt="Bomburger Napolitana" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Bomburger Napolitana</h3>
-            <p class="card-desc">Milanesa en pan brioche tostado con salsa napolitana, cheddar y lechuga</p>
-            <span class="card-price">₲ 25.000</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- PARRILLA -->
-      <div class="panel" id="panel-parrilla">
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-costilla.png" alt="Costilla" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Costilla</h3>
-            <p class="card-desc">Costilla de res ahumada lentamente a las brasas. Carne que se desprende del hueso.</p>
-            <span class="card-price">₲ 32.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80" alt="Vacío" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Vacío</h3>
-            <p class="card-desc">Corte jugoso y tierno, cocinado lentamente al calor de las brasas con leña</p>
-            <span class="card-price">₲ 34.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1558030006-450675393462?w=400&q=80" alt="Tapa Cuadril" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Tapa Cuadril</h3>
-            <p class="card-desc">Corte de primera calidad, tierno y de sabor intenso a la parrilla</p>
-            <span class="card-price">₲ 36.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Bife de Lomo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Bife de Lomo</h3>
-            <p class="card-desc">El corte más noble de la parrilla. Tierno, marmoleado y de sabor inigualable.</p>
-            <span class="card-price">₲ 40.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&q=80" alt="Costilla de Cerdo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Costilla de Cerdo</h3>
-            <p class="card-desc">Marinada en hierbas y especias, dorada a las brasas hasta el punto perfecto</p>
-            <span class="card-price">₲ 25.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&q=80" alt="Muslo de Pollo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Muslo de Pollo</h3>
-            <p class="card-desc">Muslo a las brasas, jugoso por dentro y dorado por fuera, con guarnición</p>
-            <span class="card-price">₲ 25.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-interior.png" alt="Molletera a la Pizza" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Molletera a la Pizza</h3>
-            <p class="card-desc">Mollejas con salsa de tomate y mozzarella, gratinadas al calor de la parrilla</p>
-            <span class="card-price">₲ 25.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1548340748-6d2b7d7da280?w=400&q=80" alt="Chorizo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Chorizo Artesanal</h3>
-            <p class="card-desc">Chorizo colorado al punto, crocante por fuera y jugoso por dentro</p>
-            <span class="card-price">₲ 8.000</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- PASTAS -->
-      <div class="panel" id="panel-pastas">
-        <div class="card menudia-featured" style="grid-column:span 3;background:var(--dark-3);border-color:rgba(201,168,76,0.2);display:flex;align-items:center;gap:20px;padding:20px 28px;flex-wrap:wrap;">
-          <div style="flex:1;min-width:180px;">
-            <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;color:white;margin-bottom:6px;">Los Jueves son de Pastas</div>
-            <div style="font-size:0.79rem;color:rgba(255,255,255,0.45);">Elegís la pasta y la salsa · Todas a ₲ 24.000</div>
-          </div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <span style="font-size:0.73rem;color:var(--gold);letter-spacing:0.08em;border:1px solid rgba(201,168,76,0.3);padding:4px 11px;">Bolognesa</span>
-            <span style="font-size:0.73rem;color:var(--gold);letter-spacing:0.08em;border:1px solid rgba(201,168,76,0.3);padding:4px 11px;">Estofado de Carne</span>
-            <span style="font-size:0.73rem;color:var(--gold);letter-spacing:0.08em;border:1px solid rgba(201,168,76,0.3);padding:4px 11px;">4 Quesos</span>
-            <span style="font-size:0.73rem;color:var(--gold);letter-spacing:0.08em;border:1px solid rgba(201,168,76,0.3);padding:4px 11px;">Pesto</span>
-            <span style="font-size:0.73rem;color:var(--gold);letter-spacing:0.08em;border:1px solid rgba(201,168,76,0.3);padding:4px 11px;">Albóndigas de Carne</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80" alt="Tallarín" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Tallarín</h3>
-            <p class="card-desc">Al dente con tu salsa elegida. Porción generosa para el buen apetito.</p>
-            <span class="card-price">₲ 24.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80" alt="Spaghetti" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Spaghetti</h3>
-            <p class="card-desc">Spaghetti cocinado al punto, servido con la salsa de tu elección</p>
-            <span class="card-price">₲ 24.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&q=80" alt="Ñoquis" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Ñoquis</h3>
-            <p class="card-desc">Suaves y esponjosos, bañados en la salsa que más te guste</p>
-            <span class="card-price">₲ 24.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1551183053-bf91798d8cce?w=400&q=80" alt="Cappellettis" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Cappellettis</h3>
-            <p class="card-desc">Rellenos de carne, en salsa de tu elección. Reconfortantes y sabrosos.</p>
-            <span class="card-price">₲ 24.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&q=80" alt="Ravioles" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Ravioles</h3>
-            <p class="card-desc">Rellenos de carne o verdura, con la salsa que más te apetezca</p>
-            <span class="card-price">₲ 24.000</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- EMPANADAS Y PICADAS -->
-      <div class="panel" id="panel-empanadas">
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-empa-pollo.png" alt="Empanadas de Pollo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Empanadas de Pollo</h3>
-            <p class="card-desc">Jugosas empanadas de pollo con verduras salteadas y especias de la casa</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1624128082323-beb6b8b508db?w=400&q=80" alt="Empanadas de Carne" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Empanadas de Carne</h3>
-            <p class="card-desc">Rellenas de carne cortada a cuchillo con cebolla, huevo duro y especias</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-milanesas.png" alt="Milanesitas Picadas" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Milanesitas Picadas</h3>
-            <p class="card-desc">Porción de milanesitas cortadas para compartir. Perfectas de entrada o para picar.</p>
-            <span class="card-price">₲ 23.000</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?w=400&q=80" alt="Tabla de Picada" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Tabla de Picada</h3>
-            <p class="card-desc">Selección de embutidos, quesos y pickles de la casa para compartir en mesa</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- GUARNICIONES -->
-      <div class="panel" id="panel-guarniciones">
-        <div class="card menudia-featured" style="grid-column:span 3;background:var(--dark-3);border-color:rgba(255,255,255,0.06);padding:18px 28px;">
-          <p style="font-size:0.82rem;color:rgba(255,255,255,0.45);">Las guarniciones están incluidas en los platos del Menú del Día. También podés pedirlas por separado — consultá al mozo.</p>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" alt="Arroz Quesu" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Arroz Quesu</h3>
-            <p class="card-desc">Arroz con queso Paraguay derretido. El acompañamiento favorito de la casa.</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Incluida en el plato</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=80" alt="Puré de Papa" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Puré de Papa</h3>
-            <p class="card-desc">Cremoso y casero, preparado con manteca real y un toque de crema</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Incluida en el plato</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=80" alt="Ensalada de Repollo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Ensalada de Repollo</h3>
-            <p class="card-desc">Repollo fresco rallado con aliño suave de la casa. Fresca y crujiente.</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Incluida en el plato</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" alt="Papa a la Crema" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Papa a la Crema</h3>
-            <p class="card-desc">Papas en salsa cremosa con hierbas de la casa. Reconfortante y sabrosa.</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Incluida en el plato</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=80" alt="Fideo Trofeo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Fideo Trofeo</h3>
-            <p class="card-desc">Fideos al pesto con hierbas frescas. Liviano y sabroso como acompañamiento.</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Incluida en el plato</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?w=400&q=80" alt="Arroz al Ajo" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Arroz al Ajo</h3>
-            <p class="card-desc">Arroz blanco salteado con ajo dorado y perejil fresco</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Incluida en el plato</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- POSTRES -->
-      <div class="panel" id="panel-postres">
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-cheesecake.png" alt="Cheesecake" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Cheesecake</h3>
-            <p class="card-desc">Cremoso y suave, con base de galletitas y topping de frutas de temporada</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="img/kobs-redvelvet.png" alt="Red Velvet" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Red Velvet</h3>
-            <p class="card-desc">Esponjoso bizcochuelo rojo con frosting de queso crema. Elegante y delicioso.</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&q=80" alt="Postre del Día" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Postre del Día</h3>
-            <p class="card-desc">Elaboración artesanal que varía según la estación y el ingenio de nuestra cocina</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- BEBIDAS -->
-      <div class="panel" id="panel-bebidas">
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=400&q=80" alt="Gaseosa" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Gaseosa</h3>
-            <p class="card-desc">Coca-Cola, Pepsi, 7UP, Schweppes y más — bien fría</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=400&q=80" alt="Jugo Natural" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Jugo Natural</h3>
-            <p class="card-desc">Frutas de temporada exprimidas al momento. Refrescante y natural.</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1608270586620-248524c67de9?w=400&q=80" alt="Cerveza" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Cerveza</h3>
-            <p class="card-desc">Bien fría — Brahma, Pilsner u otras según disponibilidad del día</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-img-wrap"><img src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80" alt="Vino" loading="lazy"></div>
-          <div class="card-body">
-            <h3 class="card-name">Vino de la Casa</h3>
-            <p class="card-desc">Tinto o blanco — copa o botella, para acompañar la parrilla o la pasta del día</p>
-            <span class="card-price" style="font-size:0.85rem;font-family:'DM Sans',sans-serif;color:rgba(201,168,76,0.7);">Consultar precio</span>
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -1500,7 +1125,7 @@
       <div class="con-info reveal">
         <div class="info-row">
           <div class="info-label"><i class="fa-solid fa-location-dot"></i> Encontranos</div>
-          <p id="contact-address"><a href="https://www.google.com/maps/place/Kobs+Restor%C3%A1n/@-25.2734187,-57.5660724,17z" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Dr. Gerónimo Zubizarreta<br>Madame Lynch, Asunción<br>Paraguay</a></p>
+          <p id="contact-address"><a href="https://www.google.com/maps/place/Kobs+Restor%C3%A1n/@-25.2734187,-57.5660724,17z/data=!3m1!4b1!4m6!3m5!1s0x945da61e986a6fb9:0x2d08d0f519170664!8m2!3d-25.2734187!4d-57.5634975!16s%2Fg%2F11g9qs172d?entry=ttu&amp;g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">Dr. Gerónimo Zubizarreta<br>Madame Lynch, Asunción<br>Paraguay</a></p>
         </div>
         <div class="info-row">
           <div class="info-label"><i class="fa-regular fa-clock"></i> Horarios</div>
@@ -1546,12 +1171,28 @@
 
 </div><!-- /main-content -->
 
+<!-- =================== LIGHTBOX =================== -->
+<div id="lightbox">
+  <button class="lb-close" aria-label="Cerrar">&times;</button>
+  <img src="" alt="">
+</div>
+
 <script>
 // ===================== INTRO ANIMATION =====================
 (function() {
   var overlay = document.getElementById('intro-overlay');
   var logo    = document.getElementById('intro-logo');
   var main    = document.getElementById('main-content');
+
+  // Saltar la intro en navegaciones repetidas dentro de la misma pestaña
+  var seen = false;
+  try { seen = sessionStorage.getItem('kobsIntroSeen') === '1'; } catch (e) {}
+  if (seen) {
+    overlay.remove();
+    main.classList.add('visible');
+    return;
+  }
+  try { sessionStorage.setItem('kobsIntroSeen', '1'); } catch (e) {}
 
   // 3 latidos (1.8s) → fade suave al hero
   logo.style.animation = 'heartbeat 1.8s ease-in-out forwards';
@@ -1786,13 +1427,37 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
   track.addEventListener('touchend', function() { setTimeout(function() { track.style.animationPlayState = 'running'; }, 1200); }, { passive: true });
 })();
 
+// ===================== LIGHTBOX GALERÍA =====================
+(function() {
+  var lb = document.getElementById('lightbox');
+  if (!lb) return;
+  var lbImg = lb.querySelector('img');
+  var grid  = document.getElementById('gal-grid');
+  function close() { lb.classList.remove('open'); document.body.style.overflow = ''; lbImg.src = ''; }
+  if (grid) {
+    grid.addEventListener('click', function(e) {
+      var item = e.target.closest('.gal-item');
+      if (!item) return;
+      var img = item.querySelector('img');
+      if (!img) return;
+      lbImg.src = img.currentSrc || img.src;
+      lbImg.alt = img.alt || '';
+      lb.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  }
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
+})();
+
 // ===================== CONTENIDO DINÁMICO =====================
 (function() {
   var BASE = 'https://app.indexte.cloud/api/kobs';
-  var horarios = [];
+  var MAPS_URL = 'https://www.google.com/maps/place/Kobs+Restor%C3%A1n/@-25.2734187,-57.5660724,17z/data=!3m1!4b1!4m6!3m5!1s0x945da61e986a6fb9:0x2d08d0f519170664!8m2!3d-25.2734187!4d-57.5634975!16s%2Fg%2F11g9qs172d?entry=ttu&g_ep=EgoyMDI2MDYwMS4wIKXMDSoASAFQAw%3D%3D';
 
   function esc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
   function stars(n) { return '★'.repeat(Math.min(5, Math.max(1, n||5))) + '☆'.repeat(5 - Math.min(5, Math.max(1, n||5))); }
+  function safeUrl(u) { u = String(u || ''); return /^https?:\/\//i.test(u) ? u : '#'; }
 
   // ── Galería ─────────────────────────────────────────────────────────────────
   fetch(BASE + '/galeria').then(function(r){ return r.json(); }).then(function(items) {
@@ -1838,7 +1503,7 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
       var img = '<img src="'+esc(item.imagenUrl)+'\" alt="'+esc(item.titulo||'Köbs')+'\" loading="lazy">';
       var wrap = '<div class="ig-img-wrap"'+attrs+'>'+img+'</div>';
       if (item.urlPost) {
-        return '<a href="'+esc(item.urlPost)+'\" target="_blank" rel="noopener" style="display:block">'+wrap+'</a>';
+        return '<a href="'+esc(safeUrl(item.urlPost))+'\" target="_blank" rel="noopener" style="display:block">'+wrap+'</a>';
       }
       return wrap;
     }
@@ -1883,27 +1548,12 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
     }
     if (c.direccion) {
       var addr = document.getElementById('contact-address');
-      if (addr) addr.innerHTML = '<span style="color:inherit">'+esc(c.direccion)+'</span>';
+      if (addr) addr.innerHTML = '<a href="'+MAPS_URL+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">'+esc(c.direccion).replace(/\n/g,'<br>')+'</a>';
     }
   }).catch(function(){});
 
-  // ── Horarios → select de horas ───────────────────────────────────────────────
-  fetch(BASE + '/horarios').then(function(r){ return r.json(); }).then(function(data) {
-    horarios = data || [];
-  }).catch(function(){});
-
-  // ── Info de horarios en contacto ─────────────────────────────────────────────
-  fetch(BASE + '/horarios').then(function(r){ return r.json(); }).then(function(data) {
-    if (!data || !data.length) return;
-    var el = document.getElementById('contact-horarios');
-    if (!el) return;
-    var days = ['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
-    var seen = {};
-    var lines = data
-      .filter(function(h){ return h.activo !== false && !h.cerrado && h.dia && !seen[h.dia]; })
-      .map(function(h){ seen[h.dia]=true; return h.dia+': '+(h.horaApertura||'')+' – '+(h.horaCierre||''); });
-    if (lines.length) el.innerHTML = lines.join('<br>');
-  }).catch(function(){});
+  // Horarios de contacto: texto fijo en el HTML (Lun–Vie 07:00–18:30 / Sáb–Dom 08:00–14:00).
+  // Las horas disponibles del formulario de reserva se cargan aparte vía populateHoras().
 })();
 
 // ── Horas select dinámico ────────────────────────────────────────────────────
