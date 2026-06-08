@@ -506,10 +506,6 @@
     #resenas { background: var(--dark); padding: 120px 0; }
     .res-hdr { text-align: center; margin-bottom: 64px; }
     .res-hdr .eyebrow { color: var(--gold); }
-    .resenas-grid {
-      max-width: 1100px; margin: 0 auto; padding: 0 64px;
-      display: grid; grid-template-columns: repeat(2,1fr); gap: 28px;
-    }
     .resena-card {
       background: var(--dark-2); border: 1px solid rgba(255,255,255,0.07);
       padding: 28px 30px; transition: border-color 0.3s, transform 0.3s;
@@ -521,7 +517,44 @@
     .resena-av { width:38px; height:38px; border-radius:50%; background:var(--crimson); display:flex; align-items:center; justify-content:center; font-size:0.85rem; font-weight:700; color:white; flex-shrink:0; }
     .resena-nombre { font-weight:600; font-size:0.88rem; color:white; }
     .resena-plat { font-size:0.72rem; color:var(--text-muted); letter-spacing:0.08em; }
-    @media(max-width:700px){ .resenas-grid { grid-template-columns:1fr; padding:0 24px; } }
+
+    /* Carrusel de reseñas */
+    .res-carousel { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 64px; }
+    .res-viewport { overflow: hidden; }
+    .res-track {
+      display: flex; will-change: transform;
+      touch-action: pan-y; cursor: grab; user-select: none;
+    }
+    .res-track:active { cursor: grabbing; }
+    .res-slide {
+      flex: 0 0 33.333%; max-width: 33.333%;
+      padding: 0 14px; box-sizing: border-box;
+    }
+    .res-slide .resena-card {
+      height: 100%; margin: 4px 0;
+      display: flex; flex-direction: column;
+    }
+    .res-slide .resena-texto { flex: 1 0 auto; }
+    .res-arrow {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--dark-2); border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; transition: all 0.3s; z-index: 2;
+    }
+    .res-arrow:hover { background: var(--crimson); border-color: var(--crimson); color: white; }
+    .res-prev { left: 8px; }
+    .res-next { right: 8px; }
+    @media (max-width: 900px) {
+      .res-carousel { padding: 0 44px; }
+      .res-slide { flex-basis: 50%; max-width: 50%; }
+    }
+    @media (max-width: 600px) {
+      .res-carousel { padding: 0 20px; }
+      .res-slide { flex-basis: 100%; max-width: 100%; }
+      .res-arrow { display: none; }
+    }
 
     /* ===================== PROMOS ===================== */
     #promos { background: var(--dark-3); padding: 120px 0; }
@@ -1011,7 +1044,13 @@
       <p class="eyebrow">Lo que dicen</p>
       <h2 class="sec-title light">Reseñas</h2>
     </div>
-    <div class="resenas-grid" id="resenas-grid"></div>
+    <div class="res-carousel reveal">
+      <button class="res-arrow res-prev" id="res-prev" type="button" aria-label="Reseña anterior"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="res-viewport">
+        <div class="res-track" id="res-track"></div>
+      </div>
+      <button class="res-arrow res-next" id="res-next" type="button" aria-label="Reseña siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
   </section>
 
   <!-- INSTAGRAM -->
@@ -1450,6 +1489,132 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
   document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && lb.classList.contains('open')) close(); });
 })();
 
+// ===================== CARRUSEL DE RESEÑAS =====================
+(function() {
+  var RESENAS = [
+    { nombre: "Sara Montenegro",            estrellas: 5, resena: "¡Excelente su comida y la atención! ¡Todo siempre delicioso!" },
+    { nombre: "Dalma Cabrera",              estrellas: 5, resena: "Me gustó mucho la costilla que pedí, riquísima y la porción es grande." },
+    { nombre: "Carlos Oviedo",              estrellas: 5, resena: "¡La costilla se deshace en la boca! Cocinada a fuego lento un mínimo de 5 horas." },
+    { nombre: "Regina Gómez",               estrellas: 5, resena: "Excelente lugar, muy buen ambiente y el precio es muy bueno." },
+    { nombre: "Pedro Sánchez",              estrellas: 5, resena: "Tienen minutas y sirven almuerzo. Los platos son de excelente calidad y buena porción. Menú variado dependiendo del día. Local agradable con varios ambientes, mesas tanto adentro como en el patio." },
+    { nombre: "Dahiana Rolón",              estrellas: 5, resena: "¡Amé este lugar! Excelente precio, calidad y cantidad. También la atención." },
+    { nombre: "Marisol Izquierdo",          estrellas: 5, resena: "Muy amables y la atención es rápida. Todo lo que probé hasta ahora fue muy bueno." },
+    { nombre: "Miguel Otaño Mongelós",      estrellas: 5, resena: "Uno de los mejores lugares a los que fui para almorzar: precio y calidad. Excelente atención de sus empleados, muy amables, y las empanadas riquísimas. Súper recomendado, lindo ambiente." },
+    { nombre: "Alice Agüero",               estrellas: 5, resena: "Excelente lugar para almuerzo, buena relación calidad-precio y postres riquísimos." },
+    { nombre: "Ariel Bolaños",              estrellas: 5, resena: "Lindo lugar, buena atención y ricas empanadas." },
+    { nombre: "Hugo Velázquez",             estrellas: 5, resena: "Excelente atención. Lugar agradable y la comida con bastante sabor... muy rico." },
+    { nombre: "Francisco Velasco",          estrellas: 5, resena: "El asado es bueno. Si llegas a las 12:00 es la mejor hora para encontrarlo en su punto justo." },
+    { nombre: "Federico Flores",            estrellas: 5, resena: "Excelente servicio, menú siempre disponible y con buen sabor." },
+    { nombre: "Sebastian Nicolás Rojas Jara", estrellas: 5, resena: "Espectacular lugar, comida muy rica." },
+    { nombre: "Saúl Josué",                 estrellas: 5, resena: "La comida es excelente. La atención es amena y son muy amables." },
+    { nombre: "Liliana Acosta",             estrellas: 5, resena: "El mejor." },
+    { nombre: "Sandra Aveiro",              estrellas: 5, resena: "Lugar muy limpio, atención pronta y agradable. Muy sabrosa la comida." },
+    { nombre: "Fabrizio B.S.",              estrellas: 5, resena: "Bastante agradable y precios acordes a lo que se pida." },
+    { nombre: "Oscar Daniel Gill Ocampos",  estrellas: 5, resena: "Buena comida, buena atención y buen precio. Los viernes de parrilla son lo mejor." },
+    { nombre: "Víctor Aguayo",              estrellas: 5, resena: "Ambiente agradable. La comida es buena al igual que el precio." },
+    { nombre: "Lucas Arbiza",               estrellas: 5, resena: "Muy rica la comida y el postre, excelente todo." },
+    { nombre: "Luis Monges",                estrellas: 5, resena: "¡Excelente todo! Espectacular, recomendado." },
+    { nombre: "Rodrigo Ruiz",               estrellas: 5, resena: "Muy rico todo y a buen precio." },
+    { nombre: "Victoria Sanabria",          estrellas: 5, resena: "Agradable ambiente. Almuerzos deliciosos y precio accesible." },
+    { nombre: "Laura Farías",               estrellas: 5, resena: "Viernes de asado: precio accesible, buena cantidad y buena atención." }
+  ];
+
+  var track = document.getElementById('res-track');
+  if (!track) return;
+  var viewport = track.parentElement;
+  var prevBtn  = document.getElementById('res-prev');
+  var nextBtn  = document.getElementById('res-next');
+
+  function esc(s) { return s ? String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') : ''; }
+  function stars(n) { n = Math.max(0, Math.min(5, n||0)); return '★'.repeat(n) + '☆'.repeat(5-n); }
+  function card(r) {
+    var ini = (r.nombre || 'K').trim().slice(0,2).toUpperCase();
+    return '<div class="resena-card">'
+      + '<div class="resena-stars">' + stars(r.estrellas) + '</div>'
+      + '<p class="resena-texto">"' + esc(r.resena) + '"</p>'
+      + '<div class="resena-autor"><div class="resena-av">' + esc(ini) + '</div>'
+      + '<div><div class="resena-nombre">' + esc(r.nombre) + '</div>'
+      + '<div class="resena-plat">Google</div></div></div></div>';
+  }
+
+  var N = RESENAS.length;
+  var perView = 3, slideW = 100/3, index = 0, animating = false, autoTimer = null;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function getPerView() { var w = window.innerWidth; return w <= 600 ? 1 : (w <= 900 ? 2 : 3); }
+
+  function setTransform(animate) {
+    track.style.transition = animate ? 'transform 0.6s cubic-bezier(0.4,0,0.2,1)' : 'none';
+    track.style.transform  = 'translateX(-' + (index * slideW) + '%)';
+  }
+
+  function build() {
+    perView = getPerView(); slideW = 100 / perView;
+    var html = '';
+    RESENAS.forEach(function(r) { html += '<div class="res-slide">' + card(r) + '</div>'; });
+    for (var i = 0; i < perView; i++) { html += '<div class="res-slide" aria-hidden="true">' + card(RESENAS[i % N]) + '</div>'; }
+    track.innerHTML = html;
+    [].forEach.call(track.children, function(s) { s.style.flex = '0 0 ' + slideW + '%'; s.style.maxWidth = slideW + '%'; });
+    index = 0; animating = false; setTransform(false);
+  }
+
+  function next() { if (animating) return; animating = true; index++; setTransform(true); }
+  function prev() {
+    if (animating) return; animating = true;
+    if (index <= 0) { index = N; setTransform(false); void track.offsetWidth; }
+    index--; setTransform(true);
+  }
+
+  track.addEventListener('transitionend', function(e) {
+    if (e.target !== track || e.propertyName !== 'transform') return;
+    animating = false;
+    if (index >= N) { index = 0; setTransform(false); }
+    else if (index < 0) { index = N - 1; setTransform(false); }
+  });
+
+  function startAuto() { if (reduce) return; stopAuto(); autoTimer = setInterval(next, 4500); }
+  function stopAuto()  { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } }
+
+  if (nextBtn) nextBtn.addEventListener('click', function() { next(); startAuto(); });
+  if (prevBtn) prevBtn.addEventListener('click', function() { prev(); startAuto(); });
+
+  viewport.addEventListener('mouseenter', stopAuto);
+  viewport.addEventListener('mouseleave', startAuto);
+  document.addEventListener('visibilitychange', function() { if (document.hidden) stopAuto(); else startAuto(); });
+
+  // Arrastrar / swipe
+  var dragging = false, startX = 0, dx = 0;
+  function down(e) {
+    if (animating) return;
+    dragging = true; startX = e.clientX; dx = 0;
+    stopAuto(); track.style.transition = 'none';
+  }
+  function move(e) {
+    if (!dragging) return;
+    dx = e.clientX - startX;
+    var base = -(index * slideW) / 100 * viewport.offsetWidth;
+    track.style.transform = 'translateX(' + (base + dx) + 'px)';
+  }
+  function up() {
+    if (!dragging) return; dragging = false;
+    var slidePx = viewport.offsetWidth / perView;
+    if (dx <= -slidePx * 0.2) { next(); }
+    else if (dx >= slidePx * 0.2) { prev(); }
+    else { animating = true; setTransform(true); }
+    startAuto();
+  }
+  track.addEventListener('pointerdown', down);
+  window.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', up);
+  window.addEventListener('pointercancel', up);
+
+  var rt;
+  window.addEventListener('resize', function() { clearTimeout(rt); rt = setTimeout(function() { build(); startAuto(); }, 200); });
+
+  build();
+  startAuto();
+})();
+
 // ===================== CONTENIDO DINÁMICO =====================
 (function() {
   var BASE = 'https://app.indexte.cloud/api/kobs';
@@ -1471,25 +1636,7 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
     }).join('');
   }).catch(function(){});
 
-  // ── Reseñas ──────────────────────────────────────────────────────────────────
-  fetch(BASE + '/testimonios').then(function(r){ return r.json(); }).then(function(items) {
-    var active = (items||[]).filter(function(i){ return i.activo !== false; })
-                             .sort(function(a,b){ return (a.orden||99)-(b.orden||99); })
-                             .slice(0, 4);
-    var grid = document.getElementById('resenas-grid');
-    if (!grid || !active.length) return;
-    grid.innerHTML = active.map(function(r) {
-      var initials = (r.nombre||'K').slice(0,2).toUpperCase();
-      return '<div class="resena-card reveal">'
-        + '<div class="resena-stars">'+stars(r.rating)+'</div>'
-        + '<p class="resena-texto">"'+esc(r.testimonio||r.texto||'')+'"</p>'
-        + '<div class="resena-autor">'
-        + '<div class="resena-av">'+initials+'</div>'
-        + '<div><div class="resena-nombre">'+esc(r.nombre)+'</div>'
-        + '<div class="resena-plat">'+(r.plataforma||'Google')+'</div></div>'
-        + '</div></div>';
-    }).join('');
-  }).catch(function(){});
+  // ── Reseñas: carrusel con datos curados embebidos (ver IIFE "CARRUSEL DE RESEÑAS") ──
 
     // ── Instagram carousel ────────────────────────────────────────────────────────
   fetch(BASE + '/instagram').then(function(r){ return r.json(); }).then(function(items) {
