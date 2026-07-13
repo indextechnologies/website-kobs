@@ -449,6 +449,20 @@
 
     @keyframes fadePanel { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
+    /* Menu skeleton (shown while the first fetch is in flight) */
+    .menu-skel { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; max-width: 1200px; margin: 0 auto; }
+    .skel-card { background: var(--dark-2); border: 1px solid rgba(255,255,255,0.06); overflow: hidden; }
+    .skel-img { height: 200px; background: linear-gradient(100deg, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.09) 50%, rgba(255,255,255,0.04) 70%); background-size: 200% 100%; animation: skelShimmer 1.4s ease-in-out infinite; }
+    .skel-body { padding: 20px 22px 24px; }
+    .skel-line { height: 12px; border-radius: 2px; background: linear-gradient(100deg, rgba(255,255,255,0.05) 30%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 70%); background-size: 200% 100%; animation: skelShimmer 1.4s ease-in-out infinite; }
+    .skel-line.title { width: 62%; height: 16px; margin-bottom: 12px; }
+    .skel-line.desc  { width: 90%; margin-bottom: 8px; }
+    .skel-line.desc2 { width: 70%; margin-bottom: 16px; }
+    .skel-line.price { width: 30%; height: 18px; }
+    @keyframes skelShimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @media (max-width: 900px) { .menu-skel { grid-template-columns: repeat(2,1fr); padding: 0 24px; } }
+    @media (max-width: 640px) { .menu-skel { grid-template-columns: 1fr; } }
+
     .card {
       background: var(--dark-2);
       border: 1px solid rgba(255,255,255,0.06);
@@ -1381,8 +1395,13 @@ function close() { mob.classList.remove('open'); ham.classList.remove('open'); d
     elPanels.innerHTML = html;
   }
 
+  var SKEL_CARD = '<div class="skel-card"><div class="skel-img"></div><div class="skel-body">'
+    + '<div class="skel-line title"></div>'
+    + '<div class="skel-line desc"></div><div class="skel-line desc2"></div>'
+    + '<div class="skel-line price"></div></div></div>';
+
   elL1.innerHTML = '';
-  elPanels.innerHTML = '<div class="menu-loading"><div class="menu-spinner"></div><p>Cargando menú…</p></div>';
+  elPanels.innerHTML = '<div class="menu-skel">' + SKEL_CARD.repeat(6) + '</div>';
 
   fetch(API)
     .then(function(r) { if (!r.ok) throw new Error(r.status); return r.json(); })
@@ -1621,82 +1640,118 @@ document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el)
   function safeUrl(u) { u = String(u || ''); return /^https?:\/\//i.test(u) ? u : '#'; }
 
   // ── Galería ─────────────────────────────────────────────────────────────────
-  fetch(BASE + '/galeria').then(function(r){ return r.json(); }).then(function(items) {
-    var active = (items||[]).filter(function(i){ return i.activo !== false && i.seccion === 'Galería'; })
-                            .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
-    if (!active.length) return;
-    var grid = document.getElementById('gal-grid');
-    if (!grid) return;
-    grid.innerHTML = active.map(function(i) {
-      return '<div class="gal-item"><img src="'+esc(i.imagenUrl)+'" alt="'+esc(i.titulo||'Köbs')+'" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>';
-    }).join('');
-  }).catch(function(){});
+  function loadGaleria() {
+    fetch(BASE + '/galeria').then(function(r){ return r.json(); }).then(function(items) {
+      var active = (items||[]).filter(function(i){ return i.activo !== false && i.seccion === 'Galería'; })
+                              .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
+      if (!active.length) return;
+      var grid = document.getElementById('gal-grid');
+      if (!grid) return;
+      grid.innerHTML = active.map(function(i) {
+        return '<div class="gal-item"><img src="'+esc(i.imagenUrl)+'" alt="'+esc(i.titulo||'Köbs')+'" loading="lazy"><div class="gal-overlay"><i class="fa-solid fa-expand"></i></div></div>';
+      }).join('');
+    }).catch(function(){});
+  }
 
   // ── Reseñas: carrusel con datos curados embebidos (ver IIFE "CARRUSEL DE RESEÑAS") ──
 
-    // ── Instagram carousel ────────────────────────────────────────────────────────
-  fetch(BASE + '/instagram').then(function(r){ return r.json(); }).then(function(items) {
-    var active = (items||[]).filter(function(i){ return i.activo !== false && i.imagenUrl; })
-                             .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
-    if (!active.length) return;
-    var track = document.getElementById('ig-track');
-    if (!track) return;
-    function mkItem(item, hidden) {
-      var attrs = hidden ? ' aria-hidden="true"' : '';
-      var img = '<img src="'+esc(item.imagenUrl)+'\" alt="'+esc(item.titulo||'Köbs')+'\" loading="lazy">';
-      var wrap = '<div class="ig-img-wrap"'+attrs+'>'+img+'</div>';
-      if (item.urlPost) {
-        return '<a href="'+esc(safeUrl(item.urlPost))+'\" target="_blank" rel="noopener" style="display:block">'+wrap+'</a>';
+  // ── Instagram carousel ────────────────────────────────────────────────────────
+  function loadInstagram() {
+    fetch(BASE + '/instagram').then(function(r){ return r.json(); }).then(function(items) {
+      var active = (items||[]).filter(function(i){ return i.activo !== false && i.imagenUrl; })
+                               .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
+      if (!active.length) return;
+      var track = document.getElementById('ig-track');
+      if (!track) return;
+      function mkItem(item, hidden) {
+        var attrs = hidden ? ' aria-hidden="true"' : '';
+        var img = '<img src="'+esc(item.imagenUrl)+'\" alt="'+esc(item.titulo||'Köbs')+'\" loading="lazy">';
+        var wrap = '<div class="ig-img-wrap"'+attrs+'>'+img+'</div>';
+        if (item.urlPost) {
+          return '<a href="'+esc(safeUrl(item.urlPost))+'\" target="_blank" rel="noopener" style="display:block">'+wrap+'</a>';
+        }
+        return wrap;
       }
-      return wrap;
-    }
-    var html = active.map(function(i){ return mkItem(i, false); }).join('')
-             + active.map(function(i){ return mkItem(i, true); }).join('');
-    track.innerHTML = html;
-  }).catch(function(){});
+      var html = active.map(function(i){ return mkItem(i, false); }).join('')
+               + active.map(function(i){ return mkItem(i, true); }).join('');
+      track.innerHTML = html;
+    }).catch(function(){});
+  }
 
   // ── Promos ───────────────────────────────────────────────────────────────────
-  fetch(BASE + '/promociones').then(function(r){ return r.json(); }).then(function(items) {
-    var active = (items||[]).filter(function(i){ return i.activo !== false; })
-                             .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
-    var sec = document.getElementById('promos');
-    var grid = document.getElementById('promos-grid');
-    if (!sec || !grid || !active.length) return;
-    grid.innerHTML = active.map(function(p) {
-      var imgHtml = p.imagenUrl ? '<div class="promo-img"><img src="'+esc(p.imagenUrl)+'" alt="'+esc(p.titulo)+'" loading="lazy"></div>' : '<div class="promo-img"></div>';
-      var desc = p.descuento ? (p.tipo === 'Porcentaje' ? p.descuento+'% OFF' : p.tipo === 'Monto fijo' ? '₲ '+Number(p.descuento).toLocaleString('es-PY')+' OFF' : p.tipo === '2x1' ? '2×1' : esc(String(p.descuento))) : '';
-      return '<div class="promo-card">'+imgHtml
-        +'<div class="promo-body">'
-        +'<span class="promo-badge">'+(p.tipo||'Promo')+'</span>'
-        +'<div class="promo-title">'+esc(p.titulo)+'</div>'
-        +(p.descripcion ? '<div class="promo-desc">'+esc(p.descripcion)+'</div>' : '')
-        +(desc ? '<div class="promo-discount">'+desc+'</div>' : '')
-        +'</div></div>';
-    }).join('');
-    sec.style.display = '';
-  }).catch(function(){});
+  function loadPromos() {
+    fetch(BASE + '/promociones').then(function(r){ return r.json(); }).then(function(items) {
+      var active = (items||[]).filter(function(i){ return i.activo !== false; })
+                               .sort(function(a,b){ return (a.orden||99)-(b.orden||99); });
+      var sec = document.getElementById('promos');
+      var grid = document.getElementById('promos-grid');
+      if (!sec || !grid || !active.length) return;
+      grid.innerHTML = active.map(function(p) {
+        var imgHtml = p.imagenUrl ? '<div class="promo-img"><img src="'+esc(p.imagenUrl)+'" alt="'+esc(p.titulo)+'" loading="lazy"></div>' : '<div class="promo-img"></div>';
+        var desc = p.descuento ? (p.tipo === 'Porcentaje' ? p.descuento+'% OFF' : p.tipo === 'Monto fijo' ? '₲ '+Number(p.descuento).toLocaleString('es-PY')+' OFF' : p.tipo === '2x1' ? '2×1' : esc(String(p.descuento))) : '';
+        return '<div class="promo-card">'+imgHtml
+          +'<div class="promo-body">'
+          +'<span class="promo-badge">'+(p.tipo||'Promo')+'</span>'
+          +'<div class="promo-title">'+esc(p.titulo)+'</div>'
+          +(p.descripcion ? '<div class="promo-desc">'+esc(p.descripcion)+'</div>' : '')
+          +(desc ? '<div class="promo-discount">'+desc+'</div>' : '')
+          +'</div></div>';
+      }).join('');
+      sec.style.display = '';
+    }).catch(function(){});
+  }
 
   // ── Contacto ─────────────────────────────────────────────────────────────────
-  fetch(BASE + '/contacto').then(function(r){ return r.json(); }).then(function(c) {
-    if (!c) return;
-    if (c.telefono) {
-      var ph = document.getElementById('contact-phone');
-      if (ph) { ph.textContent = c.telefono; ph.href = 'tel:'+c.telefono.replace(/\s/g,''); }
-      var wa = document.getElementById('contact-wa-link');
-      if (wa) wa.href = 'https://wa.me/'+c.telefono.replace(/[^0-9]/g,'');
-    }
-    if (c.instagram) {
-      var ig = document.getElementById('contact-ig-link');
-      if (ig) ig.href = c.instagram.startsWith('http') ? c.instagram : 'https://instagram.com/'+c.instagram.replace('@','');
-    }
-    if (c.direccion) {
-      var addr = document.getElementById('contact-address');
-      if (addr) addr.innerHTML = '<a href="'+MAPS_URL+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">'+esc(c.direccion).replace(/\n/g,'<br>')+'</a>';
-    }
-  }).catch(function(){});
+  function loadContacto() {
+    fetch(BASE + '/contacto').then(function(r){ return r.json(); }).then(function(c) {
+      if (!c) return;
+      if (c.telefono) {
+        var ph = document.getElementById('contact-phone');
+        if (ph) { ph.textContent = c.telefono; ph.href = 'tel:'+c.telefono.replace(/\s/g,''); }
+        var wa = document.getElementById('contact-wa-link');
+        if (wa) wa.href = 'https://wa.me/'+c.telefono.replace(/[^0-9]/g,'');
+      }
+      if (c.instagram) {
+        var ig = document.getElementById('contact-ig-link');
+        if (ig) ig.href = c.instagram.startsWith('http') ? c.instagram : 'https://instagram.com/'+c.instagram.replace('@','');
+      }
+      if (c.direccion) {
+        var addr = document.getElementById('contact-address');
+        if (addr) addr.innerHTML = '<a href="'+MAPS_URL+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline;text-underline-offset:3px;">'+esc(c.direccion).replace(/\n/g,'<br>')+'</a>';
+      }
+    }).catch(function(){});
+  }
 
   // Horarios de contacto: texto fijo en el HTML (Lun–Vie 07:00–18:30 / Sáb–Dom 08:00–14:00).
   // Las horas disponibles del formulario de reserva se cargan aparte vía populateHoras().
+
+  // El menú (arriba del todo) ya se pide de entrada en su propio IIFE. Estas
+  // secciones están más abajo en la página, así que se piden recién cuando el
+  // usuario está por llegar a cada una — evita requests extra compitiendo con
+  // el menú por ancho de banda en la carga inicial.
+  // "promos" arranca con display:none (recién se muestra si hay datos), así que
+  // nunca intersecta por sí sola — se dispara junto con "instagram", su vecina.
+  var deferred = [
+    ['galeria', [loadGaleria]],
+    ['instagram', [loadInstagram, loadPromos]],
+    ['contacto', [loadContacto]],
+  ];
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        io.unobserve(entry.target);
+        var hit = deferred.find(function(d){ return d[0] === entry.target.id; });
+        if (hit) hit[1].forEach(function(fn){ fn(); });
+      });
+    }, { rootMargin: '400px 0px' });
+    deferred.forEach(function(d) {
+      var el = document.getElementById(d[0]);
+      if (el) io.observe(el); else d[1].forEach(function(fn){ fn(); });
+    });
+  } else {
+    deferred.forEach(function(d) { d[1].forEach(function(fn){ fn(); }); });
+  }
 })();
 
 // ── Horas select dinámico ────────────────────────────────────────────────────
