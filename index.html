@@ -971,7 +971,7 @@
   </div>
 
   <!-- HERO -->
-  <section id="hero">
+  <section id="hero" data-section="hero">
     <div class="hero-slides">
       <div class="hero-slide" style="background-image:url('img/kobs-hero-1.png')"></div>
       <div class="hero-slide" style="background-image:url('img/kobs-hero-2.png')"></div>
@@ -997,7 +997,7 @@
   </section>
 
   <!-- NOSOTROS -->
-  <section id="nosotros">
+  <section id="nosotros" data-section="nosotros">
     <div class="nos-stripe"></div>
     <div class="nos-inner">
       <div class="nos-img-wrap reveal">
@@ -1025,7 +1025,7 @@
   </section>
 
   <!-- MENU -->
-  <section id="menu">
+  <section id="menu" data-section="menu">
     <div class="menu-hdr reveal">
       <p class="eyebrow">Lo que preparamos</p>
       <h2 class="sec-title light">Nuestro Menú</h2>
@@ -1037,7 +1037,7 @@
   </section>
 
   <!-- GALERÍA -->
-  <section id="galeria">
+  <section id="galeria" data-section="galeria">
     <div class="gal-hdr reveal">
       <p class="eyebrow">Nuestro Espacio</p>
       <h2 class="sec-title light">El Ambiente Köbs</h2>
@@ -1053,7 +1053,7 @@
   </section>
 
   <!-- RESEÑAS -->
-  <section id="resenas">
+  <section id="resenas" data-section="resenas">
     <div class="res-hdr reveal">
       <p class="eyebrow">Lo que dicen</p>
       <h2 class="sec-title light">Reseñas</h2>
@@ -1068,7 +1068,7 @@
   </section>
 
   <!-- INSTAGRAM -->
-  <section id="instagram">
+  <section id="instagram" data-section="instagram">
     <div class="ig-hdr reveal">
       <p class="eyebrow">Redes Sociales</p>
       <h2 class="sec-title">Seguinos en Instagram</h2>
@@ -1117,7 +1117,7 @@
   </section>
 
   <!-- PROMOS -->
-  <section id="promos" style="display:none">
+  <section id="promos" data-section="promos" style="display:none">
     <div class="promos-hdr reveal">
       <p class="eyebrow">Ofertas especiales</p>
       <h2 class="sec-title">Promociones</h2>
@@ -1126,7 +1126,7 @@
   </section>
 
   <!-- CONTACTO -->
-  <section id="contacto">
+  <section id="contacto" data-section="contacto">
     <div class="con-inner">
       <div class="con-form reveal">
         <p class="eyebrow">Reservas</p>
@@ -1839,6 +1839,10 @@ function handleForm(e) {
     }, 4000);
   });
 }
+</script>
+<script src="site-config-runtime.js"></script>
+<script>
+  applySiteConfig('kobs', { themeVars: { crimson: '--crimson', gold: '--gold' } });
 </script>
 </body>
 </html>
