@@ -60,6 +60,106 @@
     });
   }
 
+  var INTRO_ANIMS = ['fade', 'zoom', 'slide', 'blur', 'draw'];
+
+  function escText(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  // Clona el logo real del nav (marca + nombre — imagen o texto, lo que sea
+  // que cada sitio ya use) para que el splash quede alineado a la marca
+  // real sin pedirle al tenant un texto/imagen aparte para el intro.
+  function findBrandMark() {
+    var selectors = ['.nav-logo', '.nav__logo', 'a[href="/"] [class*="logo" i]', 'header [class*="logo" i]'];
+    for (var i = 0; i < selectors.length; i++) {
+      var el = document.querySelector(selectors[i]);
+      // outerHTML (no innerHTML): clonar solo los hijos pierde las reglas
+      // de layout propias del elemento (ej. .nav-logo es flex-column para
+      // apilar marca+nombre) — con outerHTML ese layout viaja con el clon.
+      if (el && (el.textContent.replace(/\s/g, '') || el.querySelector('img'))) return el.outerHTML;
+    }
+    var t = (document.title || '').split(/[—\-|]/)[0];
+    return '<span>' + escText(t.trim()) + '</span>';
+  }
+
+  var INTRO_CSS =
+    '.esm-intro{position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;' +
+    'background:#fafafa;transition:transform .85s cubic-bezier(.76,0,.24,1)}' +
+    '.esm-intro.esm-intro-out{transform:translateY(-101%)}' +
+    '.esm-intro-mark{transform:scale(2.2);transform-origin:center;opacity:0;text-align:center;color:#111}' +
+    '.esm-intro-fade .esm-intro-mark{animation:esmIntroFade .9s .3s cubic-bezier(.22,1,.36,1) forwards}' +
+    '@keyframes esmIntroFade{from{opacity:0;transform:scale(2.2) translateY(14px)}to{opacity:1;transform:scale(2.2) translateY(0)}}' +
+    '.esm-intro-zoom .esm-intro-mark{animation:esmIntroZoom .9s .3s cubic-bezier(.22,1,.36,1) forwards}' +
+    '@keyframes esmIntroZoom{from{opacity:0;transform:scale(3.6)}to{opacity:1;transform:scale(2.2)}}' +
+    '.esm-intro-slide .esm-intro-mark{animation:esmIntroSlide .8s .3s cubic-bezier(.22,1,.36,1) forwards}' +
+    '@keyframes esmIntroSlide{from{opacity:0;transform:scale(2.2) translateY(46px)}to{opacity:1;transform:scale(2.2) translateY(0)}}' +
+    '.esm-intro-blur .esm-intro-mark{animation:esmIntroBlur 1s .3s ease-out forwards}' +
+    '@keyframes esmIntroBlur{from{opacity:0;filter:blur(16px);transform:scale(2.2)}to{opacity:1;filter:blur(0);transform:scale(2.2)}}' +
+    '.esm-intro-draw .esm-intro-mark{animation:esmIntroFade .7s .3s cubic-bezier(.22,1,.36,1) forwards;position:relative;padding-bottom:.6em}' +
+    '.esm-intro-draw .esm-intro-mark::after{content:"";position:absolute;left:50%;bottom:0;width:60%;height:2px;' +
+    'background:currentColor;transform:translateX(-50%) scaleX(0);transform-origin:center;animation:esmIntroDraw 1s .9s cubic-bezier(.65,0,.35,1) forwards}' +
+    '@keyframes esmIntroDraw{to{transform:translateX(-50%) scaleX(1)}}' +
+    '@media (max-width:640px){.esm-intro-mark{transform:scale(1.5)}' +
+    '.esm-intro-fade .esm-intro-mark,.esm-intro-slide .esm-intro-mark,.esm-intro-blur .esm-intro-mark,.esm-intro-draw .esm-intro-mark{animation-name:esmIntroFadeSm}' +
+    '.esm-intro-zoom .esm-intro-mark{animation-name:esmIntroZoomSm}}' +
+    '@keyframes esmIntroFadeSm{from{opacity:0;transform:scale(1.5) translateY(10px)}to{opacity:1;transform:scale(1.5) translateY(0)}}' +
+    '@keyframes esmIntroZoomSm{from{opacity:0;transform:scale(2.3)}to{opacity:1;transform:scale(1.5)}}';
+
+  function ensureIntroStyles() {
+    if (document.getElementById('esm-intro-style')) return;
+    var style = document.createElement('style');
+    style.id = 'esm-intro-style';
+    style.textContent = INTRO_CSS;
+    document.head.appendChild(style);
+  }
+
+  // Intro de marca configurable desde el editor visual: apagado, animación
+  // de logo (varias a elegir, clonando el logo real del nav) o HTML/CSS/JS
+  // 100% libre (para intros a medida, como las de Victoria/Bom Pain).
+  // Corre UNA sola vez por sesión, respeta prefers-reduced-motion, y nunca
+  // se ejecuta dentro del preview embebido del editor (solo en visitas
+  // reales) para no repetir la animación en cada tecla que el cliente
+  // escribe mientras edita.
+  function applyIntro(cfg, tenant) {
+    if (window.top !== window.self) return;
+    var intro = cfg && cfg.intro;
+    var mode = intro && intro.mode;
+    if (!mode || mode === 'off') return;
+
+    var key = 'esmIntroSeen:' + tenant;
+    if (sessionStorage.getItem(key)) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    sessionStorage.setItem(key, '1');
+
+    var pre = document.getElementById('pre-intro');
+
+    if (mode === 'html' && intro.html) {
+      var wrap = document.createElement('div');
+      document.body.insertBefore(wrap, document.body.firstChild);
+      setInnerHTMLWithScripts(wrap, intro.html);
+      if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+      return;
+    }
+
+    ensureIntroStyles();
+    var anim = INTRO_ANIMS.indexOf(intro.animation) !== -1 ? intro.animation : 'fade';
+    var overlay = document.createElement('div');
+    overlay.className = 'esm-intro esm-intro-' + anim;
+    overlay.setAttribute('aria-hidden', 'true');
+    overlay.innerHTML = '<div class="esm-intro-mark">' + findBrandMark() + '</div>';
+    document.body.insertBefore(overlay, document.body.firstChild);
+    if (pre && pre.parentNode) pre.parentNode.removeChild(pre);
+
+    document.body.style.overflow = 'hidden';
+    setTimeout(function () {
+      overlay.classList.add('esm-intro-out');
+      document.body.style.overflow = '';
+      setTimeout(function () { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 900);
+    }, 2000);
+  }
+
   function applySiteConfig(tenant, opts) {
     opts = opts || {};
     var sections = Array.prototype.slice.call(document.querySelectorAll('[data-section]'));
@@ -144,6 +244,7 @@
 
     var base = (opts.apiBase || 'https://app.indexte.cloud') + '/api/' + tenant + '/site-config';
     fetch(base).then(function (r) { return r.ok ? r.json() : {}; }).then(function (cfg) {
+      applyIntro(cfg, tenant);
       if (!cfg || !Object.keys(cfg).length) return;
       applyConfigToDom(cfg);
     }).catch(function () { /* config rota o de red: el sitio queda como está */ });
