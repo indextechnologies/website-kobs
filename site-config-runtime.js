@@ -72,7 +72,7 @@
   // que cada sitio ya use) para que el splash quede alineado a la marca
   // real sin pedirle al tenant un texto/imagen aparte para el intro.
   function findBrandMark() {
-    var selectors = ['.nav-logo', '.nav__logo', 'a[href="/"] [class*="logo" i]', 'header [class*="logo" i]'];
+    var selectors = ['.nav-logo', '.nav__logo', '.nav-brand', 'a[href="/"] [class*="logo" i]', 'header [class*="logo" i]', 'nav [class*="brand" i]'];
     for (var i = 0; i < selectors.length; i++) {
       var el = document.querySelector(selectors[i]);
       // outerHTML (no innerHTML): clonar solo los hijos pierde las reglas
