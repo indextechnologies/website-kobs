@@ -87,11 +87,17 @@
       })();
 
       if (Array.isArray(cfg.order) && cfg.order.length) {
-        var first = sections.filter(function (el) { return cfg.order.indexOf(el.getAttribute('data-section')) !== -1; })[0];
-        var parent = first && first.parentElement;
+        var present = sections.filter(function (el) { return cfg.order.indexOf(el.getAttribute('data-section')) !== -1; });
+        var parent = present[0] && present[0].parentElement;
         if (parent) {
+          // Ancla = lo que sigue a la última sección en su posición ORIGINAL.
+          // insertBefore(anchor) en vez de appendChild evita correr hermanos
+          // que no son secciones (footer, scripts, chrome inyectado por
+          // shop.js) hacia arriba — appendChild los movía al fondo del
+          // parent, dejando esos hermanos "varados" antes de las secciones.
+          var anchor = present[present.length - 1].nextSibling;
           cfg.order.forEach(function (id) {
-            if (byId[id] && byId[id].parentElement === parent) parent.appendChild(byId[id]);
+            if (byId[id] && byId[id].parentElement === parent) parent.insertBefore(byId[id], anchor);
           });
         }
       }
