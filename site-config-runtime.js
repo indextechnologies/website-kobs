@@ -21,15 +21,32 @@
     return section.querySelector('.section-sub') || section.querySelector('p');
   }
 
+  // Click-to-jump: cuando el sitio corre embebido en el editor visual de
+  // Esmera (iframe en /contenido), clickear una sección le avisa al padre
+  // para que salte/resalte la tarjeta correspondiente. No hace nada para
+  // un visitante real (solo se activa dentro de un iframe).
+  function wireEditorClicks(sections) {
+    if (window.top === window.self) return;
+    sections.forEach(function (el) {
+      el.style.cursor = 'pointer';
+      el.addEventListener('mouseenter', function () { el.style.outline = '2px dashed rgba(37,99,235,.55)'; el.style.outlineOffset = '-2px'; });
+      el.addEventListener('mouseleave', function () { el.style.outline = ''; });
+      el.addEventListener('click', function () {
+        window.top.postMessage({ source: 'esmera-site', id: el.getAttribute('data-section') }, 'https://app.indexte.cloud');
+      }, true);
+    });
+  }
+
   function applySiteConfig(tenant, opts) {
     opts = opts || {};
+    var sections = Array.prototype.slice.call(document.querySelectorAll('[data-section]'));
+    var byId = {};
+    sections.forEach(function (el) { byId[el.getAttribute('data-section')] = el; });
+    wireEditorClicks(sections);
+
     var base = (opts.apiBase || 'https://app.indexte.cloud') + '/api/' + tenant + '/site-config';
     fetch(base).then(function (r) { return r.ok ? r.json() : {}; }).then(function (cfg) {
       if (!cfg || !Object.keys(cfg).length) return;
-
-      var sections = Array.prototype.slice.call(document.querySelectorAll('[data-section]'));
-      var byId = {};
-      sections.forEach(function (el) { byId[el.getAttribute('data-section')] = el; });
 
       (cfg.hidden || []).forEach(function (id) {
         if (byId[id]) byId[id].style.display = 'none';
